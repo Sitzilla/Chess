@@ -12,6 +12,7 @@ public class GameBoard extends JPanel implements ActionListener{
 	private static final int ARRAYSIZE = 8; 	
 	 private final static Piece[][] gameBoard = new Piece[ARRAYSIZE][ARRAYSIZE]; //instantiates an array of 'Pair' objects of size 10
 	 boolean isSelected = false;
+	 ArrayList<Pair> listOfMoves = new ArrayList<Pair>(); // arraylist of legal moves
 	 Piece selectedPiece;
 	 int selectedPieceXPosition;
 	 int selectedPieceYPosition;
@@ -54,17 +55,51 @@ public class GameBoard extends JPanel implements ActionListener{
 
 		//initializes the gameboard array with base values.  The array could be thought of as an (x, y) coordinate plane.
 		//All values for an array of type 'int' are defaulted to 0, and these loops put values of '1' where piece objects will start 
+		//initializes pawns	
 		for(int x = 0; x<8; x++){
 			gameBoard[x][6] = new Pawn(x, 6, false);
 			gameBoard[x][1] = new Pawn(x, 1, true);
-			button[6][x].setText("white");
-			button[1][x].setText("black");
+			button[6][x].setText("Pawn");
+			button[1][x].setText("Pawn");
 		}
-		
-			gameBoard[3][7] = new Queen(3, 6, false);
-			gameBoard[3][0] = new Queen(3, 1, true);
-			button[7][3].setText("queen");
-			button[0][3].setText("queen");
+		//initializes queens
+			gameBoard[3][7] = new Queen(3, 7, false);
+			gameBoard[3][0] = new Queen(3, 0, true);
+			button[7][3].setText("Queen");
+			button[0][3].setText("Queen");
+		//initializes rooks
+			gameBoard[7][0] = new Rook(7, 0, true);
+			gameBoard[0][0] = new Rook(0, 0, true);
+			gameBoard[7][7] = new Rook(7, 7, false);
+			gameBoard[0][7] = new Rook(0, 7, false);
+			button[7][0].setText("Rook");
+			button[7][7].setText("Rook");
+			button[0][0].setText("Rook");
+			button[0][7].setText("Rook");
+		//initializes knights
+			gameBoard[6][0] = new Knight(6, 0, true);
+			gameBoard[1][0] = new Knight(1, 0, true);
+			gameBoard[6][7] = new Knight(6, 7, false);
+			gameBoard[1][7] = new Knight(1, 7, false);
+			button[7][1].setText("Knight");
+			button[7][6].setText("Knight");
+			button[0][1].setText("Knight");
+			button[0][6].setText("Knight");
+		//initializes bishops
+			gameBoard[5][0] = new Bishop(5, 0, true);
+			gameBoard[2][0] = new Bishop(2, 0, true);
+			gameBoard[5][7] = new Bishop(5, 7, false);
+			gameBoard[2][7] = new Bishop(2, 7, false);
+			button[7][2].setText("Bishop");
+			button[7][5].setText("Bishop");
+			button[0][2].setText("Bishop");
+			button[0][5].setText("Bishop");
+		//initializes kings
+			gameBoard[4][7] = new King(4, 7, false);
+			gameBoard[4][0] = new King(4, 0, true);
+			button[7][4].setText("King");
+			button[0][4].setText("King");
+			
 	}
 
 	//method that highlights  legal moves on the board
@@ -77,6 +112,30 @@ public class GameBoard extends JPanel implements ActionListener{
 		catch (ArrayIndexOutOfBoundsException e){	
 		}
 	}
+	//methods that returns all legal moves for a piece
+	public ArrayList<Pair> isLegalMoves(Pair[] inList){
+		ArrayList<Pair> outList = new ArrayList<Pair>(); 
+		
+		
+			for (int j = 0; j < selectedPiece.getArraySize();j++){
+			try {	
+				if (gameBoard[selectedPiece.getXValue()+inList[j].getFirst()][selectedPiece.getYValue()+inList[j].getSecond()]!=null){
+					if (gameBoard[selectedPiece.getXValue()+inList[j].getFirst()][selectedPiece.getYValue()+inList[j].getSecond()].isPlayersPiece()==false){
+						outList.add(inList[j]);
+					}
+				break;
+				}
+				outList.add(inList[j]);
+			}
+			catch (ArrayIndexOutOfBoundsException e){	
+			}
+			catch (NullPointerException e){	
+			}
+		}
+		
+		return outList;
+	}
+	
 	//method that returns all buttons to their original color moves on the board
 	public void colorBoard(){
 		for (int i = 0; i < 8; i++){  
@@ -113,27 +172,53 @@ public class GameBoard extends JPanel implements ActionListener{
 		//logical statement to check if the selected piece is a piece
 		if (gameBoard[columnPos][rowPos]!=null){	
 			
+			//if the selected piece is the players piece then treat it as a new selection
+			if (selectedPiece==null || gameBoard[columnPos][rowPos].isPlayersPiece()==true){
+			listOfMoves.clear();
 			selectedPiece = gameBoard[columnPos][rowPos];
 			isSelected = toggleIsSelected(isSelected);
-			ArrayList<Pair> list = new ArrayList<Pair>();	
+			ArrayList<Pair[]> list = new ArrayList<Pair[]>();	
 			list = gameBoard[columnPos][rowPos].moveRange();
 			selectedPieceXPosition = gameBoard[columnPos][rowPos].getXValue();
 			selectedPieceYPosition = gameBoard[columnPos][rowPos].getYValue();
 			colorBoard();
 	
-				//highlights the moves that the piece can make
+			
+				//takes all moves from the arraylist 'list' and adds the legal moves to the arraylist 'listOfMoves'
 				for (int i = 0; i < list.size(); i++) {
-					highlightLocation(selectedPieceXPosition, selectedPieceYPosition, list.get(i).getFirst(), list.get(i).getSecond());
+				
+						listOfMoves.addAll(isLegalMoves(list.get(i)));
+					
 				}
+				
+				//highlights the moves that the piece can make
+				for (int i = 0; i < listOfMoves.size(); i++) {
+						highlightLocation(selectedPieceXPosition, selectedPieceYPosition, listOfMoves.get(i).getFirst(), listOfMoves.get(i).getSecond());
+					
+				}
+			}
 		
 		}
 		
 		//logical statement that moves a piece (if selected) to another space
-		if (selectedPiece!=null && gameBoard[columnPos][rowPos]==null){
-			
-			movePiece(selectedPieceXPosition, selectedPieceYPosition, columnPos, rowPos);
-			colorBoard();
-			selectedPiece = null;
+		if (selectedPiece!=null){
+			//if the selected piece is the players piece then treat it as a new selection
+			if (gameBoard[columnPos][rowPos]==null){
+				
+				//if the selected move is in the list of legal moves
+				if (source.getBackground()==Color.RED){
+				movePiece(selectedPieceXPosition, selectedPieceYPosition, columnPos, rowPos);
+				colorBoard();
+				selectedPiece = null;
+				}
+			} else if (gameBoard[columnPos][rowPos].isPlayersPiece()==false){
+				//if the selected move is in the list of legal moves
+				if (source.getBackground()==Color.RED){
+					movePiece(selectedPieceXPosition, selectedPieceYPosition, columnPos, rowPos);
+					colorBoard();
+					selectedPiece = null;
+				}
+			}
 		}
 	}
 	

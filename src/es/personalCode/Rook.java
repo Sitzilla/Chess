@@ -4,25 +4,46 @@ import java.util.ArrayList;
 
 public class Rook extends Piece{
 	
-	ArrayList<Pair> list = new ArrayList<Pair>();	
+	final static int ARRAYSIZE = 7;
+	ArrayList<Pair[]> list = new ArrayList<Pair[]>();	
+	private final Pair[] arrayOfMoves1 = new Pair[ARRAYSIZE];
+	private final Pair[] arrayOfMoves2 = new Pair[ARRAYSIZE];
+	private final Pair[] arrayOfMoves3 = new Pair[ARRAYSIZE];
+	private final Pair[] arrayOfMoves4 = new Pair[ARRAYSIZE];
+	private boolean playersPiece;
 	
 public Rook(int xValue, int yValue, boolean playersPiece) {
 		super(xValue, yValue, playersPiece);
-		// TODO Auto-generated constructor stub
+		this.playersPiece = playersPiece;
 	}
 
-public static int getMovementAmount(){
+public int getArraySize(){
 		
-		return 10;
+		return ARRAYSIZE;
 	}
 
 
-public ArrayList<Pair> moveRange(){
-	Pair option1 = new Pair(0,5);
-	Pair option2 = new Pair(0,6);
-	list.add(option1);
-	list.add(option2);
+public ArrayList<Pair[]> moveRange(){
 	
+	
+	for (int i = 0; i < ARRAYSIZE; i++){
+		arrayOfMoves1[i] = new Pair(0,i+1);
+	}
+	for (int i = 0; i < ARRAYSIZE; i++){
+		arrayOfMoves2[i] = new Pair(i+1,0);
+	}
+	for (int i = 0; i < ARRAYSIZE; i++){
+		arrayOfMoves3[i] = new Pair(0,-i-1);
+	}
+	for (int i = 0; i < ARRAYSIZE; i++){
+		arrayOfMoves4[i] = new Pair(-i-1,0);
+	}
+
+	list.add(arrayOfMoves1);
+	list.add(arrayOfMoves2);
+	list.add(arrayOfMoves3);
+	list.add(arrayOfMoves4);
+
 	return list;
 }
 

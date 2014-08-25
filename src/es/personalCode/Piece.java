@@ -7,11 +7,11 @@ public abstract class Piece{
 //	ArrayList<Pair> list = new ArrayList<Pair>();	
 	private int xLocation;
 	private int yLocation;
-	protected static boolean playersPiece;
+	private boolean playersPiece;
 	
-	public Piece(int xValue, int yValue, boolean players){
+	public Piece(int xValue, int yValue, boolean playersPiece){
 		this.xLocation = xValue;
-		this.playersPiece = players;
+		this.playersPiece = playersPiece;
 		this.yLocation = yValue;
 		 
 		
@@ -35,8 +35,8 @@ public abstract class Piece{
 	}
 	
 	
-	public  abstract ArrayList<Pair> moveRange();
-	
+	public  abstract ArrayList<Pair[]> moveRange();
+	public  abstract int getArraySize();
 	
 	
 }
