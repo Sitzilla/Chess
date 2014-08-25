@@ -17,12 +17,23 @@ public abstract class Piece{
 		
 	}
 	
+	public boolean isPlayersPiece(){
+		return playersPiece;
+	}
+	
 	public int getYValue(){
 		return yLocation;
 	}
 	public int getXValue(){
 		return xLocation;
 	}
+	public void setYValue(int value){
+		yLocation = value;
+	}
+	public void setXValue(int value){
+		xLocation = value;
+	}
+	
 	
 	public  abstract ArrayList<Pair> moveRange();
 	

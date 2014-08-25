@@ -7,10 +7,11 @@ import java.util.List;
 public class Pawn extends Piece{
 
 	ArrayList<Pair> list = new ArrayList<Pair>();	
-
+	boolean playersPiece = true;
+	
 	public Pawn(int xValue, int yValue, boolean playersPiece) {
 		super(xValue, yValue, playersPiece);
-		// TODO Auto-generated constructor stub
+		this.playersPiece = playersPiece;
 	}
 
 //	Collection<Square> getPossibleMoves(){
@@ -30,21 +31,24 @@ public class Pawn extends Piece{
 		
 		Pair option1 = new Pair(0,1);
 		Pair option2 = new Pair(0,2);
-		Pair option3 = new Pair(0,3);
+		Pair option3 = new Pair(-1,1);
+		Pair option4 = new Pair(1,1);
 		list.add(option1);
 		list.add(option2);
 		list.add(option3);
+		list.add(option4);
 		
 		return list;
 		}
 		
 		Pair option1 = new Pair(0,-1);
 		Pair option2 = new Pair(0,-2);
-		Pair option3 = new Pair(0,-3);
+		Pair option3 = new Pair(-1,-1);
+		Pair option4 = new Pair(1,-1);
 		list.add(option1);
 		list.add(option2);
 		list.add(option3);
-		
+		list.add(option4);
 		return list;
 		
 	}
