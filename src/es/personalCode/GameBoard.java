@@ -2,9 +2,14 @@ package es.personalCode;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Array;
+import java.net.URL;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class GameBoard extends JPanel implements ActionListener{
@@ -16,16 +21,23 @@ public class GameBoard extends JPanel implements ActionListener{
 	 Piece selectedPiece;
 	 int selectedPieceXPosition;
 	 int selectedPieceYPosition;
-	 
+	 BufferedImage img = null;
 	 JButton[][] button = new JButton[ARRAYSIZE][ARRAYSIZE];
-	 
-	 
+	 Graphics g;
+	 private Image[][] chessPieceImages = new Image[2][6];
 	 
 	public GameBoard(){
-
+		
+		createImages();
+		
+		
 		for (int i = 0; i < 8; i++){  //initialize column (i)
 			for (int j = 0; j < 8; j++){ //initialize row (j)
 				button[i][j] = new JButton();
+				// 'fill this in' using a transparent icon..
+                ImageIcon icon = new ImageIcon(
+                        new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB));
+                button[i][j].setIcon(icon);
 			}
 		}
 		
@@ -56,49 +68,52 @@ public class GameBoard extends JPanel implements ActionListener{
 		//initializes the gameboard array with base values.  The array could be thought of as an (x, y) coordinate plane.
 		//All values for an array of type 'int' are defaulted to 0, and these loops put values of '1' where piece objects will start 
 		//initializes pawns	
+//		getImage();
+//		g = img.getGraphics();
 		for(int x = 0; x<8; x++){
 			gameBoard[x][6] = new Pawn(x, 6, false);
 			gameBoard[x][1] = new Pawn(x, 1, true);
-			button[6][x].setText("Pawn");
-			button[1][x].setText("Pawn");
+			button[6][x].setIcon(new ImageIcon(chessPieceImages[1][5]));
+			button[1][x].setIcon(new ImageIcon(chessPieceImages[0][5]));
 		}
 		//initializes queens
 			gameBoard[3][7] = new Queen(3, 7, false);
 			gameBoard[3][0] = new Queen(3, 0, true);
-			button[7][3].setText("Queen");
-			button[0][3].setText("Queen");
+			button[7][3].setIcon(new ImageIcon(chessPieceImages[1][1]));
+			button[0][3].setIcon(new ImageIcon(chessPieceImages[0][1]));
+			
 		//initializes rooks
 			gameBoard[7][0] = new Rook(7, 0, true);
 			gameBoard[0][0] = new Rook(0, 0, true);
 			gameBoard[7][7] = new Rook(7, 7, false);
 			gameBoard[0][7] = new Rook(0, 7, false);
-			button[7][0].setText("Rook");
-			button[7][7].setText("Rook");
-			button[0][0].setText("Rook");
-			button[0][7].setText("Rook");
+			button[7][0].setIcon(new ImageIcon(chessPieceImages[1][2]));
+			button[7][7].setIcon(new ImageIcon(chessPieceImages[1][2]));
+			button[0][0].setIcon(new ImageIcon(chessPieceImages[0][2]));
+			button[0][7].setIcon(new ImageIcon(chessPieceImages[0][2]));
 		//initializes knights
 			gameBoard[6][0] = new Knight(6, 0, true);
 			gameBoard[1][0] = new Knight(1, 0, true);
 			gameBoard[6][7] = new Knight(6, 7, false);
 			gameBoard[1][7] = new Knight(1, 7, false);
-			button[7][1].setText("Knight");
-			button[7][6].setText("Knight");
-			button[0][1].setText("Knight");
-			button[0][6].setText("Knight");
+			button[7][1].setIcon(new ImageIcon(chessPieceImages[1][3]));
+			button[7][6].setIcon(new ImageIcon(chessPieceImages[1][3]));
+			button[0][1].setIcon(new ImageIcon(chessPieceImages[0][3]));
+			button[0][6].setIcon(new ImageIcon(chessPieceImages[0][3]));
 		//initializes bishops
 			gameBoard[5][0] = new Bishop(5, 0, true);
 			gameBoard[2][0] = new Bishop(2, 0, true);
 			gameBoard[5][7] = new Bishop(5, 7, false);
 			gameBoard[2][7] = new Bishop(2, 7, false);
-			button[7][2].setText("Bishop");
-			button[7][5].setText("Bishop");
-			button[0][2].setText("Bishop");
-			button[0][5].setText("Bishop");
+			button[7][2].setIcon(new ImageIcon(chessPieceImages[1][4]));
+			button[7][5].setIcon(new ImageIcon(chessPieceImages[1][4]));
+			button[0][2].setIcon(new ImageIcon(chessPieceImages[0][4]));
+			button[0][5].setIcon(new ImageIcon(chessPieceImages[0][4]));
 		//initializes kings
 			gameBoard[4][7] = new King(4, 7, false);
 			gameBoard[4][0] = new King(4, 0, true);
-			button[7][4].setText("King");
-			button[0][4].setText("King");
+			button[7][4].setIcon(new ImageIcon(chessPieceImages[1][0]));
+			button[0][4].setIcon(new ImageIcon(chessPieceImages[0][0]));
 			
 	}
 
@@ -154,13 +169,18 @@ public class GameBoard extends JPanel implements ActionListener{
 	public void movePiece(int currentX , int currentY, int moveX, int moveY){
 		int buttonMoveY = Math.abs(7 - moveY);
 		int buttonMoveY2 = Math.abs(7 - currentY);
+		int intPlayersPiece=0;
+		//returns whether it is a players piece or not
+		if (selectedPiece.isPlayersPiece()){
+			intPlayersPiece = 1;
+		}
 		
 		gameBoard[moveX][moveY] = gameBoard[currentX][currentY];
 		gameBoard[moveX][moveY].setXValue(moveX);
 		gameBoard[moveX][moveY].setYValue(moveY);
-		button[buttonMoveY][moveX].setText("White");
+		button[buttonMoveY][moveX].setIcon(new ImageIcon(chessPieceImages[intPlayersPiece][selectedPiece.getPieceIndex()]));
 		gameBoard[currentX][currentY] = null;
-		button[buttonMoveY2][currentX].setText("");
+		button[buttonMoveY2][currentX].setIcon(null);
 	}
 	
 	
@@ -230,6 +250,35 @@ public class GameBoard extends JPanel implements ActionListener{
 		return true;
 	}
 	
+//	public void getImage() {
+//		
+//        try {
+//        	img = ImageIO.read(new File("C://workspace//chess.png"));
+//            
+//        } catch (IOException e) {
+//        }
+//    }	
+//	
+//	public void paintPiece(Graphics g){
+//		g.drawImage(img, 1, 1, 1, 1, 1, 1, 1, 1, null);
+//		
+//		
+//	}
 	
+	  private final void createImages() {
+	        try {
+	            URL url = new URL("http://i.stack.imgur.com/memI0.png");
+	            BufferedImage bi = ImageIO.read(url);
+	            for (int ii = 0; ii < 2; ii++) {
+	                for (int jj = 0; jj < 6; jj++) {
+	                    chessPieceImages[ii][jj] = bi.getSubimage(
+	                            jj * 64, ii * 64, 64, 64);
+	                }
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            System.exit(1);
+	        }
+	    }
 	
 }

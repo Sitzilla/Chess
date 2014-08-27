@@ -37,6 +37,6 @@ public abstract class Piece{
 	
 	public  abstract ArrayList<Pair[]> moveRange();
 	public  abstract int getArraySize();
-	
+	public abstract int getPieceIndex();
 	
 }

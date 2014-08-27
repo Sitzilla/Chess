@@ -19,6 +19,11 @@ public class Pawn extends Piece{
 		this.playersPiece = playersPiece;
 	}
 
+public int getPieceIndex(){
+	
+	return 5;
+}
+	
 public int getArraySize(){
 		
 		return ARRAYSIZE;

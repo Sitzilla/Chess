@@ -13,11 +13,11 @@ public class Game {
 		JFrame window = new JFrame("Chess");
 		GameBoard content = new GameBoard();
 		window.setContentPane(content);
-		Dimension d = new Dimension(800,800);
+		Dimension d = new Dimension(600,600);
 		window.setPreferredSize(d);
 		window.setResizable(true);
 		window.pack();
-		window.setLocation(200,200);
+		window.setLocation(150,150);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
 
