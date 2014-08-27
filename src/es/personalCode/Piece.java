@@ -38,5 +38,7 @@ public abstract class Piece{
 	public  abstract ArrayList<Pair[]> moveRange();
 	public  abstract int getArraySize();
 	public abstract int getPieceIndex();
-	
+	public abstract void setHasMoved();
+	public abstract void setDiagonals(int leftTop, int leftBottom, int rightTop, int rightBottom, int frontOne, int frontTwo, int bottomOne, int bottomTwo);
+	public abstract void resetMove();
 }

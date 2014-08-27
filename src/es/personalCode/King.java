@@ -58,4 +58,25 @@ list.add(arrayOfMoves8);
 	return list;
 }
 
+
+@Override
+public void setHasMoved() {
+	// TODO Auto-generated method stub
+	
+}
+
+
+@Override
+public void setDiagonals(int leftTop, int leftBottom, int rightTop, int rightBottom, int frontOne, int frontTwo, int bottomOne, int bottomTwo) {
+	// TODO Auto-generated method stub
+	
+}
+
+
+@Override
+public void resetMove() {
+	// TODO Auto-generated method stub
+	
+}
+
 }

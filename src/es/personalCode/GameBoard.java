@@ -3,27 +3,24 @@ package es.personalCode;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+@SuppressWarnings("serial")
 public class GameBoard extends JPanel implements ActionListener{
 
 	private static final int ARRAYSIZE = 8; 	
 	 private final static Piece[][] gameBoard = new Piece[ARRAYSIZE][ARRAYSIZE]; //instantiates an array of 'Pair' objects of size 10
-	 boolean isSelected = false;
+	 boolean playersTurn = true;
 	 ArrayList<Pair> listOfMoves = new ArrayList<Pair>(); // arraylist of legal moves
 	 Piece selectedPiece;
 	 int selectedPieceXPosition;
 	 int selectedPieceYPosition;
 	 BufferedImage img = null;
 	 JButton[][] button = new JButton[ARRAYSIZE][ARRAYSIZE];
-	 Graphics g;
 	 private Image[][] chessPieceImages = new Image[2][6];
 	 
 	public GameBoard(){
@@ -68,8 +65,6 @@ public class GameBoard extends JPanel implements ActionListener{
 		//initializes the gameboard array with base values.  The array could be thought of as an (x, y) coordinate plane.
 		//All values for an array of type 'int' are defaulted to 0, and these loops put values of '1' where piece objects will start 
 		//initializes pawns	
-//		getImage();
-//		g = img.getGraphics();
 		for(int x = 0; x<8; x++){
 			gameBoard[x][6] = new Pawn(x, 6, false);
 			gameBoard[x][1] = new Pawn(x, 1, true);
@@ -116,11 +111,182 @@ public class GameBoard extends JPanel implements ActionListener{
 			button[0][4].setIcon(new ImageIcon(chessPieceImages[0][0]));
 			
 	}
+	
+	public void actionPerformed(ActionEvent evt) {
+		JComponent source = (JComponent)evt.getSource(); //finds the source of the objects that triggers the event
+		int rowPos = (Integer) source.getClientProperty("row");
+		int columnPos = (Integer) source.getClientProperty("column");
+		
+		//logical statement to check if the selected piece is a piece
+		if (gameBoard[columnPos][rowPos]!=null){	
+			
+			try {
+				if (gameBoard[columnPos][rowPos].isPlayersPiece() == selectedPiece.isPlayersPiece()){
+					selectedPiece.resetMove();
+					selectedPiece = null;
+				}
+			} 
+			catch (NullPointerException e){
+			}
+			buildMoves(source, rowPos, columnPos, playersTurn);
+
+		}
+		
+		//logical statement that moves a piece (if selected) to another space
+		if (selectedPiece!=null){
+			executeMoves(source, rowPos, columnPos, playersTurn);
+		}
+	}
+	
+	public void executeMoves(JComponent source, int rowPos, int columnPos, boolean turn){
+		//if the selected piece is the players piece then treat it as a new selection
+		if (gameBoard[columnPos][rowPos]==null){
+			
+			//if the selected move is in the list of legal moves
+			if (source.getBackground()==Color.RED){
+			movePiece(selectedPieceXPosition, selectedPieceYPosition, columnPos, rowPos);
+			colorBoard();
+			selectedPiece.resetMove();
+			selectedPiece = null;
+			togglePlayersTurn();
+			}
+		} else if (gameBoard[columnPos][rowPos].isPlayersPiece()!=turn){
+			//if the selected move is in the list of legal moves
+			if (source.getBackground()==Color.RED){
+				movePiece(selectedPieceXPosition, selectedPieceYPosition, columnPos, rowPos);
+				colorBoard();
+				selectedPiece.resetMove();
+				selectedPiece = null;
+				togglePlayersTurn();
+			}
+		}
+	}
+	
+	public void buildMoves(JComponent source, int rowPos, int columnPos, boolean turn){
+		//if the selected piece is the players piece then treat it as a new selection
+		if (selectedPiece==null && gameBoard[columnPos][rowPos].isPlayersPiece()==turn){
+		listOfMoves.clear();
+		selectedPiece = gameBoard[columnPos][rowPos];
+		ArrayList<Pair[]> list = new ArrayList<Pair[]>();
+		
+		//if piece is a pawn, check its diagonals for objects
+		if (selectedPiece.getPieceIndex()==5){
+			int leftTop = 0;
+			int leftBottom = 0;
+			int rightTop = 0;
+			int rightBottom = 0;
+			int topOne = 0;
+			int topTwo = 0;
+			int bottomOne = 0;
+			int bottomTwo = 0;
+			
+			try {
+				gameBoard[columnPos-1][rowPos+1].getClass();
+				leftTop = 1;
+				}
+				catch (ArrayIndexOutOfBoundsException e){	
+				leftTop = 0;
+				}
+				catch (NullPointerException e){	
+				leftTop = 0;
+				}
+			try {
+				gameBoard[columnPos-1][rowPos-1].getClass();
+				leftBottom = 1;
+				}
+				catch (ArrayIndexOutOfBoundsException e){	
+					leftBottom = 0;
+				}
+				catch (NullPointerException e){	
+					leftBottom = 0;
+				}
+			try {
+				gameBoard[columnPos+1][rowPos+1].getClass();
+				rightTop = 1;
+				}
+				catch (ArrayIndexOutOfBoundsException e){	
+					rightTop = 0;
+				}
+				catch (NullPointerException e){	
+					rightTop = 0;
+				}
+			try {
+				gameBoard[columnPos+1][rowPos-1].getClass();
+				rightBottom = 1;
+				}
+				catch (ArrayIndexOutOfBoundsException e){	
+					rightBottom = 0;
+				}
+				catch (NullPointerException e){	
+					rightBottom = 0;
+				}
+			try {
+				gameBoard[columnPos][rowPos+1].getClass();
+				topOne = 1;
+				}
+				catch (ArrayIndexOutOfBoundsException e){	
+					topOne = 1;
+				}
+				catch (NullPointerException e){	
+					topOne = 0;
+				}
+			try {
+				gameBoard[columnPos][rowPos+2].getClass();
+				topTwo = 1;
+				}
+				catch (ArrayIndexOutOfBoundsException e){	
+					topTwo = 1;
+				}
+				catch (NullPointerException e){	
+					topTwo = 0;
+				}
+			try {
+				gameBoard[columnPos][rowPos-1].getClass();
+				bottomOne = 1;
+				}
+				catch (ArrayIndexOutOfBoundsException e){	
+					bottomOne = 1;
+				}
+				catch (NullPointerException e){	
+					bottomOne = 0;
+				}
+			try {
+				gameBoard[columnPos][rowPos-2].getClass();
+				bottomTwo = 1;
+				}
+				catch (ArrayIndexOutOfBoundsException e){	
+					bottomTwo = 1;
+				}
+				catch (NullPointerException e){	
+					bottomTwo = 0;
+				}
+		
+			
+			//Piece leftTop, Piece leftBottom, Piece rightTop, Piece rightBottom, Piece topOne, Piece topTwo, Piece bottomOne, Piece bottomTwo
+			selectedPiece.setDiagonals(leftTop, leftBottom, rightTop, rightBottom, 
+					topOne, topTwo, bottomOne, bottomTwo);
+		}
+		list = gameBoard[columnPos][rowPos].moveRange();
+		selectedPieceXPosition = gameBoard[columnPos][rowPos].getXValue();
+		selectedPieceYPosition = gameBoard[columnPos][rowPos].getYValue();
+		colorBoard();
+			//takes all moves from the arraylist 'list' and adds the legal moves to the arraylist 'listOfMoves'
+			for (int i = 0; i < list.size(); i++) {
+					listOfMoves.addAll(isLegalMoves(list.get(i)));
+			}
+			//highlights the moves that the piece can make
+			for (int i = 0; i < listOfMoves.size(); i++) {
+					highlightLocation(selectedPieceXPosition, selectedPieceYPosition, listOfMoves.get(i).getFirst(), listOfMoves.get(i).getSecond());
+			}
+		}
+	}
+	
 
 	//method that highlights  legal moves on the board
 	public void highlightLocation(int currentX , int currentY, int moveX, int moveY){
 		int totalY = Math.abs(7 - (currentY + moveY));
 		int totalX = currentX + moveX;
+		
 		try {
 		button[totalY][totalX].setBackground(Color.RED);
 		}
@@ -131,11 +297,14 @@ public class GameBoard extends JPanel implements ActionListener{
 	public ArrayList<Pair> isLegalMoves(Pair[] inList){
 		ArrayList<Pair> outList = new ArrayList<Pair>(); 
 		
-		
 			for (int j = 0; j < selectedPiece.getArraySize();j++){
 			try {	
-				if (gameBoard[selectedPiece.getXValue()+inList[j].getFirst()][selectedPiece.getYValue()+inList[j].getSecond()]!=null){
-					if (gameBoard[selectedPiece.getXValue()+inList[j].getFirst()][selectedPiece.getYValue()+inList[j].getSecond()].isPlayersPiece()==false){
+				//integer variables that are the location of the piece
+				int xPiece = selectedPiece.getXValue()+inList[j].getFirst();
+				int yPiece = selectedPiece.getYValue()+inList[j].getSecond();
+				//if the gameboard is null
+				if (gameBoard[xPiece][yPiece]!=null){
+					if (gameBoard[xPiece][yPiece].isPlayersPiece()!=playersTurn){
 						outList.add(inList[j]);
 					}
 				break;
@@ -181,89 +350,21 @@ public class GameBoard extends JPanel implements ActionListener{
 		button[buttonMoveY][moveX].setIcon(new ImageIcon(chessPieceImages[intPlayersPiece][selectedPiece.getPieceIndex()]));
 		gameBoard[currentX][currentY] = null;
 		button[buttonMoveY2][currentX].setIcon(null);
-	}
-	
-	
-	public void actionPerformed(ActionEvent evt) {
-		JComponent source = (JComponent)evt.getSource(); //finds the source of the objects that triggers the event
-		int rowPos = (Integer) source.getClientProperty("row");
-		int columnPos = (Integer) source.getClientProperty("column");
 		
-		//logical statement to check if the selected piece is a piece
-		if (gameBoard[columnPos][rowPos]!=null){	
-			
-			//if the selected piece is the players piece then treat it as a new selection
-			if (selectedPiece==null || gameBoard[columnPos][rowPos].isPlayersPiece()==true){
-			listOfMoves.clear();
-			selectedPiece = gameBoard[columnPos][rowPos];
-			isSelected = toggleIsSelected(isSelected);
-			ArrayList<Pair[]> list = new ArrayList<Pair[]>();	
-			list = gameBoard[columnPos][rowPos].moveRange();
-			selectedPieceXPosition = gameBoard[columnPos][rowPos].getXValue();
-			selectedPieceYPosition = gameBoard[columnPos][rowPos].getYValue();
-			colorBoard();
-	
-			
-				//takes all moves from the arraylist 'list' and adds the legal moves to the arraylist 'listOfMoves'
-				for (int i = 0; i < list.size(); i++) {
-				
-						listOfMoves.addAll(isLegalMoves(list.get(i)));
-					
-				}
-				
-				//highlights the moves that the piece can make
-				for (int i = 0; i < listOfMoves.size(); i++) {
-						highlightLocation(selectedPieceXPosition, selectedPieceYPosition, listOfMoves.get(i).getFirst(), listOfMoves.get(i).getSecond());
-					
-				}
-			}
-		
-		}
-		
-		//logical statement that moves a piece (if selected) to another space
-		if (selectedPiece!=null){
-			//if the selected piece is the players piece then treat it as a new selection
-			if (gameBoard[columnPos][rowPos]==null){
-				
-				//if the selected move is in the list of legal moves
-				if (source.getBackground()==Color.RED){
-				movePiece(selectedPieceXPosition, selectedPieceYPosition, columnPos, rowPos);
-				colorBoard();
-				selectedPiece = null;
-				}
-			} else if (gameBoard[columnPos][rowPos].isPlayersPiece()==false){
-				//if the selected move is in the list of legal moves
-				if (source.getBackground()==Color.RED){
-					movePiece(selectedPieceXPosition, selectedPieceYPosition, columnPos, rowPos);
-					colorBoard();
-					selectedPiece = null;
-				}
-			}
+		//if piece is a pawn, set its 'hasMoved' boolean to true so that it cannot move two spaces
+		if (selectedPiece.getPieceIndex()==5){
+			selectedPiece.setHasMoved();
 		}
 	}
 	
 	//method to toggle the variable 'isSelected' bewteen true and false
-	public boolean toggleIsSelected(boolean value){
-		if (isSelected){
-			return false;
+	public void togglePlayersTurn(){
+		if (playersTurn){
+			playersTurn = false;
+		} else {
+		playersTurn = true;
 		}
-		return true;
 	}
-	
-//	public void getImage() {
-//		
-//        try {
-//        	img = ImageIO.read(new File("C://workspace//chess.png"));
-//            
-//        } catch (IOException e) {
-//        }
-//    }	
-//	
-//	public void paintPiece(Graphics g){
-//		g.drawImage(img, 1, 1, 1, 1, 1, 1, 1, 1, null);
-//		
-//		
-//	}
 	
 	  private final void createImages() {
 	        try {
