@@ -20,6 +20,11 @@ public class GameBoard extends JPanel implements ActionListener{
 	 int selectedPieceXPosition;
 	 int selectedPieceYPosition;
 	 BufferedImage img = null;
+	 JButton moveButton = new JButton("New Game");
+	 JButton exitButton = new JButton("Exit");
+	 JLabel gameStatusLabel = new JLabel("Chess Fun");
+	 
+	 
 	 JButton[][] button = new JButton[ARRAYSIZE][ARRAYSIZE];
 	 private Image[][] chessPieceImages = new Image[2][6];
 	 
