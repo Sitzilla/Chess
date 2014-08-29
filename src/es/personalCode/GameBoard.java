@@ -47,20 +47,26 @@ public class GameBoard extends JPanel implements ActionListener{
 		JPanel frame = new JPanel();
 		
 		//sets row0
-		frame.setLayout( new GridLayout(8,8));
+		frame.setLayout( new GridLayout(9,8));
 		
 
-		for (int i = 0; i < 8; i++){  //initialize column (i)
+		for (int i = 1; i < 9; i++){  //initialize column (i)
 			for (int j = 0; j < 8; j++){ //initialize row (j)
 				
 				
-				button[i][j].putClientProperty("row", Integer.valueOf(Math.abs(7-i)));
-				button[i][j].putClientProperty("column", Integer.valueOf(j));
-				button[i][j].addActionListener(this);
-				frame.add(button[i][j]);
+				button[i-1][j].putClientProperty("row", Integer.valueOf(Math.abs(8-i)));
+				button[i-1][j].putClientProperty("column", Integer.valueOf(j));
+				button[i-1][j].addActionListener(this);
+				frame.add(button[i-1][j]);
 			}
 		}
-
+		
+		moveButton.addActionListener(this);
+		frame.add(moveButton);
+		exitButton.addActionListener(this);
+		frame.add(exitButton);
+		frame.add(gameStatusLabel);
+		
 		//adds all of the rows to the frame
 		setLayout( new GridLayout(1,1));
 		add(frame);
@@ -176,100 +182,7 @@ public class GameBoard extends JPanel implements ActionListener{
 		
 		//if piece is a pawn, check its diagonals for objects
 		if (selectedPiece.getPieceIndex()==5){
-			int leftTop = 0;
-			int leftBottom = 0;
-			int rightTop = 0;
-			int rightBottom = 0;
-			int topOne = 0;
-			int topTwo = 0;
-			int bottomOne = 0;
-			int bottomTwo = 0;
-			
-			try {
-				gameBoard[columnPos-1][rowPos+1].getClass();
-				leftTop = 1;
-				}
-				catch (ArrayIndexOutOfBoundsException e){	
-				leftTop = 0;
-				}
-				catch (NullPointerException e){	
-				leftTop = 0;
-				}
-			try {
-				gameBoard[columnPos-1][rowPos-1].getClass();
-				leftBottom = 1;
-				}
-				catch (ArrayIndexOutOfBoundsException e){	
-					leftBottom = 0;
-				}
-				catch (NullPointerException e){	
-					leftBottom = 0;
-				}
-			try {
-				gameBoard[columnPos+1][rowPos+1].getClass();
-				rightTop = 1;
-				}
-				catch (ArrayIndexOutOfBoundsException e){	
-					rightTop = 0;
-				}
-				catch (NullPointerException e){	
-					rightTop = 0;
-				}
-			try {
-				gameBoard[columnPos+1][rowPos-1].getClass();
-				rightBottom = 1;
-				}
-				catch (ArrayIndexOutOfBoundsException e){	
-					rightBottom = 0;
-				}
-				catch (NullPointerException e){	
-					rightBottom = 0;
-				}
-			try {
-				gameBoard[columnPos][rowPos+1].getClass();
-				topOne = 1;
-				}
-				catch (ArrayIndexOutOfBoundsException e){	
-					topOne = 1;
-				}
-				catch (NullPointerException e){	
-					topOne = 0;
-				}
-			try {
-				gameBoard[columnPos][rowPos+2].getClass();
-				topTwo = 1;
-				}
-				catch (ArrayIndexOutOfBoundsException e){	
-					topTwo = 1;
-				}
-				catch (NullPointerException e){	
-					topTwo = 0;
-				}
-			try {
-				gameBoard[columnPos][rowPos-1].getClass();
-				bottomOne = 1;
-				}
-				catch (ArrayIndexOutOfBoundsException e){	
-					bottomOne = 1;
-				}
-				catch (NullPointerException e){	
-					bottomOne = 0;
-				}
-			try {
-				gameBoard[columnPos][rowPos-2].getClass();
-				bottomTwo = 1;
-				}
-				catch (ArrayIndexOutOfBoundsException e){	
-					bottomTwo = 1;
-				}
-				catch (NullPointerException e){	
-					bottomTwo = 0;
-				}
-		
-			
-			//Piece leftTop, Piece leftBottom, Piece rightTop, Piece rightBottom, Piece topOne, Piece topTwo, Piece bottomOne, Piece bottomTwo
-			selectedPiece.setDiagonals(leftTop, leftBottom, rightTop, rightBottom, 
-					topOne, topTwo, bottomOne, bottomTwo);
+			setPawnStructure(columnPos, rowPos);
 		}
 		list = gameBoard[columnPos][rowPos].moveRange();
 		selectedPieceXPosition = gameBoard[columnPos][rowPos].getXValue();
@@ -386,5 +299,103 @@ public class GameBoard extends JPanel implements ActionListener{
 	            System.exit(1);
 	        }
 	    }
+
+	  public void setPawnStructure(int columnPos, int rowPos){
+		  int leftTop = 0;
+			int leftBottom = 0;
+			int rightTop = 0;
+			int rightBottom = 0;
+			int topOne = 0;
+			int topTwo = 0;
+			int bottomOne = 0;
+			int bottomTwo = 0;
+			
+			try {
+				gameBoard[columnPos-1][rowPos+1].getClass();
+				leftTop = 1;
+				}
+				catch (ArrayIndexOutOfBoundsException e){	
+				leftTop = 0;
+				}
+				catch (NullPointerException e){	
+				leftTop = 0;
+				}
+			try {
+				gameBoard[columnPos-1][rowPos-1].getClass();
+				leftBottom = 1;
+				}
+				catch (ArrayIndexOutOfBoundsException e){	
+					leftBottom = 0;
+				}
+				catch (NullPointerException e){	
+					leftBottom = 0;
+				}
+			try {
+				gameBoard[columnPos+1][rowPos+1].getClass();
+				rightTop = 1;
+				}
+				catch (ArrayIndexOutOfBoundsException e){	
+					rightTop = 0;
+				}
+				catch (NullPointerException e){	
+					rightTop = 0;
+				}
+			try {
+				gameBoard[columnPos+1][rowPos-1].getClass();
+				rightBottom = 1;
+				}
+				catch (ArrayIndexOutOfBoundsException e){	
+					rightBottom = 0;
+				}
+				catch (NullPointerException e){	
+					rightBottom = 0;
+				}
+			try {
+				gameBoard[columnPos][rowPos+1].getClass();
+				topOne = 1;
+				}
+				catch (ArrayIndexOutOfBoundsException e){	
+					topOne = 1;
+				}
+				catch (NullPointerException e){	
+					topOne = 0;
+				}
+			try {
+				gameBoard[columnPos][rowPos+2].getClass();
+				topTwo = 1;
+				}
+				catch (ArrayIndexOutOfBoundsException e){	
+					topTwo = 1;
+				}
+				catch (NullPointerException e){	
+					topTwo = 0;
+				}
+			try {
+				gameBoard[columnPos][rowPos-1].getClass();
+				bottomOne = 1;
+				}
+				catch (ArrayIndexOutOfBoundsException e){	
+					bottomOne = 1;
+				}
+				catch (NullPointerException e){	
+					bottomOne = 0;
+				}
+			try {
+				gameBoard[columnPos][rowPos-2].getClass();
+				bottomTwo = 1;
+				}
+				catch (ArrayIndexOutOfBoundsException e){	
+					bottomTwo = 1;
+				}
+				catch (NullPointerException e){	
+					bottomTwo = 0;
+				}
+		
+			
+			//Piece leftTop, Piece leftBottom, Piece rightTop, Piece rightBottom, Piece topOne, Piece topTwo, Piece bottomOne, Piece bottomTwo
+			selectedPiece.setDiagonals(leftTop, leftBottom, rightTop, rightBottom, 
+					topOne, topTwo, bottomOne, bottomTwo);
+	  }
+
 	
 }

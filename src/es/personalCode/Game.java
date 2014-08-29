@@ -13,7 +13,7 @@ public class Game {
 		JFrame window = new JFrame("Chess");
 		GameBoard content = new GameBoard();
 		window.setContentPane(content);
-		Dimension d = new Dimension(600,600);
+		Dimension d = new Dimension(800,800);
 		window.setPreferredSize(d);
 		window.setResizable(true);
 		window.pack();

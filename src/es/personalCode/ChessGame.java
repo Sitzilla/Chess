@@ -1,7 +1,11 @@
 package es.personalCode;
 
-public class ChessGame extends GameBoard{
+public class ChessGame {
 
+	GameBoard gameboard;
+	
+	
+	
 	
 	
 	
