@@ -8,12 +8,14 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
 
 @SuppressWarnings("serial")
 public class GameBoard extends JPanel implements ActionListener{
 
 	private static final int ARRAYSIZE = 8; 	
-	 private final static Piece[][] gameBoard = new Piece[ARRAYSIZE][ARRAYSIZE]; //instantiates an array of 'Pair' objects of size 10
+//	 private final static Piece[][] gameBoard = new Piece[ARRAYSIZE][ARRAYSIZE]; //instantiates an array of 'Pair' objects of size 10
 	 boolean playersTurn = true;
 	 ArrayList<Pair> listOfMoves = new ArrayList<Pair>(); // arraylist of legal moves
 	 Piece selectedPiece;
@@ -24,12 +26,21 @@ public class GameBoard extends JPanel implements ActionListener{
 	 JButton exitButton = new JButton("Exit");
 	 JLabel gameStatusLabel = new JLabel("Chess Fun");
 	 
+	 private final JLabel message = new JLabel(
+	            "White's move");
+
 	 
 	 JButton[][] button = new JButton[ARRAYSIZE][ARRAYSIZE];
 	 private Image[][] chessPieceImages = new Image[2][6];
 	 
+	//creates an instance of the TicTacToeGame
+		ChessGame game = new ChessGame();
+	 
 	public GameBoard(){
-		
+		JToolBar tools = new JToolBar();
+		tools.setFloatable(false);
+      
+        
 		createImages();
 		
 		
@@ -47,28 +58,32 @@ public class GameBoard extends JPanel implements ActionListener{
 		JPanel frame = new JPanel();
 		
 		//sets row0
-		frame.setLayout( new GridLayout(9,8));
-		
+		frame.setLayout( new GridLayout(8,8));
+		frame.setPreferredSize(new java.awt.Dimension(600,535));
 
-		for (int i = 1; i < 9; i++){  //initialize column (i)
+		
+		for (int i = 0; i < 8; i++){  //initialize column (i)
 			for (int j = 0; j < 8; j++){ //initialize row (j)
 				
 				
-				button[i-1][j].putClientProperty("row", Integer.valueOf(Math.abs(8-i)));
-				button[i-1][j].putClientProperty("column", Integer.valueOf(j));
-				button[i-1][j].addActionListener(this);
-				frame.add(button[i-1][j]);
+				button[i][j].putClientProperty("row", Integer.valueOf(Math.abs(7-i)));
+				button[i][j].putClientProperty("column", Integer.valueOf(j));
+				button[i][j].addActionListener(this);
+				frame.add(button[i][j]);
 			}
 		}
 		
-		moveButton.addActionListener(this);
-		frame.add(moveButton);
-		exitButton.addActionListener(this);
-		frame.add(exitButton);
-		frame.add(gameStatusLabel);
-		
 		//adds all of the rows to the frame
-		setLayout( new GridLayout(1,1));
+		setLayout( new FlowLayout());
+		add(tools, BorderLayout.PAGE_START);
+	       tools.add(new JButton("New")); // TODO - add functionality!	
+	        tools.add(new JButton("Save")); // TODO - add functionality!
+	        tools.add(new JButton("Restore")); // TODO - add functionality!
+	        tools.addSeparator();
+	        tools.add(new JButton("Resign")); // TODO - add functionality!
+	        tools.addSeparator();
+	        tools.add(message);
+	        
 		add(frame);
 		
 		colorBoard();
@@ -77,53 +92,53 @@ public class GameBoard extends JPanel implements ActionListener{
 		//All values for an array of type 'int' are defaulted to 0, and these loops put values of '1' where piece objects will start 
 		//initializes pawns	
 		for(int x = 0; x<8; x++){
-			gameBoard[x][6] = new Pawn(x, 6, false);
-			gameBoard[x][1] = new Pawn(x, 1, true);
+//			gameBoard[x][6] = new Pawn(x, 6, false);
+//			gameBoard[x][1] = new Pawn(x, 1, true);
 			button[6][x].setIcon(new ImageIcon(chessPieceImages[1][5]));
 			button[1][x].setIcon(new ImageIcon(chessPieceImages[0][5]));
 		}
 		//initializes queens
-			gameBoard[3][7] = new Queen(3, 7, false);
-			gameBoard[3][0] = new Queen(3, 0, true);
+//			gameBoard[3][7] = new Queen(3, 7, false);
+//			gameBoard[3][0] = new Queen(3, 0, true);
 			button[7][3].setIcon(new ImageIcon(chessPieceImages[1][1]));
 			button[0][3].setIcon(new ImageIcon(chessPieceImages[0][1]));
 			
 		//initializes rooks
-			gameBoard[7][0] = new Rook(7, 0, true);
-			gameBoard[0][0] = new Rook(0, 0, true);
-			gameBoard[7][7] = new Rook(7, 7, false);
-			gameBoard[0][7] = new Rook(0, 7, false);
+//			gameBoard[7][0] = new Rook(7, 0, true);
+//			gameBoard[0][0] = new Rook(0, 0, true);
+//			gameBoard[7][7] = new Rook(7, 7, false);
+//			gameBoard[0][7] = new Rook(0, 7, false);
 			button[7][0].setIcon(new ImageIcon(chessPieceImages[1][2]));
 			button[7][7].setIcon(new ImageIcon(chessPieceImages[1][2]));
 			button[0][0].setIcon(new ImageIcon(chessPieceImages[0][2]));
 			button[0][7].setIcon(new ImageIcon(chessPieceImages[0][2]));
 		//initializes knights
-			gameBoard[6][0] = new Knight(6, 0, true);
-			gameBoard[1][0] = new Knight(1, 0, true);
-			gameBoard[6][7] = new Knight(6, 7, false);
-			gameBoard[1][7] = new Knight(1, 7, false);
+//			gameBoard[6][0] = new Knight(6, 0, true);
+//			gameBoard[1][0] = new Knight(1, 0, true);
+//			gameBoard[6][7] = new Knight(6, 7, false);
+//			gameBoard[1][7] = new Knight(1, 7, false);
 			button[7][1].setIcon(new ImageIcon(chessPieceImages[1][3]));
 			button[7][6].setIcon(new ImageIcon(chessPieceImages[1][3]));
 			button[0][1].setIcon(new ImageIcon(chessPieceImages[0][3]));
 			button[0][6].setIcon(new ImageIcon(chessPieceImages[0][3]));
 		//initializes bishops
-			gameBoard[5][0] = new Bishop(5, 0, true);
-			gameBoard[2][0] = new Bishop(2, 0, true);
-			gameBoard[5][7] = new Bishop(5, 7, false);
-			gameBoard[2][7] = new Bishop(2, 7, false);
+//			gameBoard[5][0] = new Bishop(5, 0, true);
+//			gameBoard[2][0] = new Bishop(2, 0, true);
+//			gameBoard[5][7] = new Bishop(5, 7, false);
+//			gameBoard[2][7] = new Bishop(2, 7, false);
 			button[7][2].setIcon(new ImageIcon(chessPieceImages[1][4]));
 			button[7][5].setIcon(new ImageIcon(chessPieceImages[1][4]));
 			button[0][2].setIcon(new ImageIcon(chessPieceImages[0][4]));
 			button[0][5].setIcon(new ImageIcon(chessPieceImages[0][4]));
 		//initializes kings
-			gameBoard[4][7] = new King(4, 7, false);
-			gameBoard[4][0] = new King(4, 0, true);
+//			gameBoard[4][7] = new King(4, 7, false);
+//			gameBoard[4][0] = new King(4, 0, true);
 			button[7][4].setIcon(new ImageIcon(chessPieceImages[1][0]));
 			button[0][4].setIcon(new ImageIcon(chessPieceImages[0][0]));
 			
 	}
 	
-	public void actionPerformed(ActionEvent evt) {
+	public void actionPerformed(ActionEvent evt) {	
 		JComponent source = (JComponent)evt.getSource(); //finds the source of the objects that triggers the event
 		int rowPos = (Integer) source.getClientProperty("row");
 		int columnPos = (Integer) source.getClientProperty("column");
@@ -149,29 +164,29 @@ public class GameBoard extends JPanel implements ActionListener{
 		}
 	}
 	
-	public void executeMoves(JComponent source, int rowPos, int columnPos, boolean turn){
-		//if the selected piece is the players piece then treat it as a new selection
-		if (gameBoard[columnPos][rowPos]==null){
-			
-			//if the selected move is in the list of legal moves
-			if (source.getBackground()==Color.RED){
-			movePiece(selectedPieceXPosition, selectedPieceYPosition, columnPos, rowPos);
-			colorBoard();
-			selectedPiece.resetMove();
-			selectedPiece = null;
-			togglePlayersTurn();
-			}
-		} else if (gameBoard[columnPos][rowPos].isPlayersPiece()!=turn){
-			//if the selected move is in the list of legal moves
-			if (source.getBackground()==Color.RED){
-				movePiece(selectedPieceXPosition, selectedPieceYPosition, columnPos, rowPos);
-				colorBoard();
-				selectedPiece.resetMove();
-				selectedPiece = null;
-				togglePlayersTurn();
-			}
-		}
-	}
+//	public void executeMoves(JComponent source, int rowPos, int columnPos, boolean turn){
+//		//if the selected piece is the players piece then treat it as a new selection
+//		if (gameBoard[columnPos][rowPos]==null){
+//			
+//			//if the selected move is in the list of legal moves
+//			if (source.getBackground()==Color.RED){
+//			movePiece(selectedPieceXPosition, selectedPieceYPosition, columnPos, rowPos);
+//			colorBoard();
+//			selectedPiece.resetMove();
+//			selectedPiece = null;
+//			togglePlayersTurn();
+//			}
+//		} else if (gameBoard[columnPos][rowPos].isPlayersPiece()!=turn){
+//			//if the selected move is in the list of legal moves
+//			if (source.getBackground()==Color.RED){
+//				movePiece(selectedPieceXPosition, selectedPieceYPosition, columnPos, rowPos);
+//				colorBoard();
+//				selectedPiece.resetMove();
+//				selectedPiece = null;
+//				togglePlayersTurn();
+//			}
+//		}
+//	}
 	
 	public void buildMoves(JComponent source, int rowPos, int columnPos, boolean turn){
 		//if the selected piece is the players piece then treat it as a new selection
