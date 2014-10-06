@@ -11,6 +11,7 @@ public class Rook extends Piece{
 	private final Pair[] arrayOfMoves3 = new Pair[ARRAYSIZE];
 	private final Pair[] arrayOfMoves4 = new Pair[ARRAYSIZE];
 	private boolean playersPiece;
+	private boolean hasMoved = false;
 	
 public Rook(int xValue, int yValue, boolean playersPiece) {
 		super(xValue, yValue, playersPiece);
@@ -48,8 +49,7 @@ public ArrayList<Pair[]> moveRange(){
 
 @Override
 public void setHasMoved() {
-	// TODO Auto-generated method stub
-	
+	hasMoved = true;
 }
 
 @Override

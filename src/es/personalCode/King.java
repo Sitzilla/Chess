@@ -15,6 +15,7 @@ public class King extends Piece{
 	private final Pair[] arrayOfMoves7 = new Pair[ARRAYSIZE];
 	private final Pair[] arrayOfMoves8 = new Pair[ARRAYSIZE];
 	private boolean playersPiece;
+	private boolean hasMoved = false;
 	
 public King(int xValue, int yValue, boolean playersPiece) {
 		super(xValue, yValue, playersPiece);
@@ -61,8 +62,7 @@ list.add(arrayOfMoves8);
 
 @Override
 public void setHasMoved() {
-	// TODO Auto-generated method stub
-	
+	hasMoved = true;
 }
 
 
