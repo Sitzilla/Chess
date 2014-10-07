@@ -4,11 +4,13 @@ public class HypotheticalMove extends ChessGame{
 
 	private static final int ARRAYSIZE = 8; 	
 	 private static Piece[][] gameBoard = new Piece[ARRAYSIZE][ARRAYSIZE]; //instantiates an array of 'Pair' objects of size 10
-	
-	
-	 HypotheticalMove(Piece[][] gameBoard){
+	 boolean playersTurn;
+	 int kingsXPosition;
+	 int kingsYPosition;
+	 
+	 HypotheticalMove(Piece[][] gameBoard, boolean playersTurn){
 		 this.gameBoard = gameBoard;
-		 
+		 this.playersTurn = playersTurn;
 	 }
 
 
@@ -17,6 +19,32 @@ public class HypotheticalMove extends ChessGame{
 		gameBoard[piecePositionX][piecePositionX] = null;
 	}
 	
+	public int getKingsXPosition(){
+		return kingsXPosition;
+	}
+	public int getKingsYPosition(){
+		return kingsYPosition;
+	}
+	
+	public void opponentKingsPosition(){
+		for(int x = 0; x<8; x++){
+			for(int y = 0; y<8; y++){
+				if (playersTurn){
+					if (gameBoard[x][y].getPieceIndex()==0 && gameBoard[x][y].isPlayersPiece()==true){
+						kingsXPosition = x;
+						kingsYPosition = y;
+					}
+					
+				} else {
+					if (gameBoard[x][y].getPieceIndex()==0 && gameBoard[x][y].isPlayersPiece()==false){
+						kingsXPosition = x;
+						kingsYPosition = y;
+					}
+				}
+				
+			}
+		}
+	}
 	
 	
 	

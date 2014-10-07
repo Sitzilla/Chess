@@ -120,8 +120,9 @@ public class ChessGame {
 	public ArrayList<Pair> isLegalMoves(Pair[] inList){
 		ArrayList<Pair> outList = new ArrayList<Pair>(); 
 		
-		if (!inCheck){ //if the king is not in check standard rules apply
+//		if (!inCheck){ //if the king is not in check standard rules apply
 			for (int j = 0; j < selectedPiece.getArraySize();j++){
+				HypotheticalMove testMove = new HypotheticalMove(gameBoard, playersTurn);
 			try {	
 				//integer variables that are the location of the piece
 				int xPiece = selectedPiece.getXValue()+inList[j].getFirst();
@@ -134,7 +135,13 @@ public class ChessGame {
 							gameBoard[xPiece][yPiece].setHasMoved();
 							inCheck = true;
 						} 
-						outList.add(inList[j]);
+						testMove.movePiece(selectedPiece.getXValue(), selectedPiece.getYValue(), xPiece, yPiece);
+						testMove.opponentKingsPosition();
+						
+						if (!spotIsInThreat(testMove.getKingsXPosition(), testMove.getKingsYPosition())){
+							outList.add(inList[j]);
+						}
+						
 					}
 				break;
 				}
@@ -148,37 +155,47 @@ public class ChessGame {
 		
 		return outList;
 		
-		} else { //if the king IS in check then special rules apply in terms of 'Legal Moves'
-			for (int j = 0; j < selectedPiece.getArraySize();j++){
-				HypotheticalMove testMove = new HypotheticalMove(gameBoard);
-				try {	
-					//integer variables that are the location of the piece
-					int xPiece = selectedPiece.getXValue()+inList[j].getFirst();
-					int yPiece = selectedPiece.getYValue()+inList[j].getSecond();
-					//if the gameboard is null
-					if (gameBoard[xPiece][yPiece]!=null){
-						if (gameBoard[xPiece][yPiece].isPlayersPiece()!=playersTurn){
-							//if the piece that can be taken is a king, change the "check" boolean
-							if (gameBoard[xPiece][yPiece].getPieceIndex()==0){
-								gameBoard[xPiece][yPiece].setHasMoved();
-								inCheck = true;
-							} 
-							outList.add(inList[j]);
-						}
-					break;
-					}
-					outList.add(inList[j]);
-				}
-				catch (ArrayIndexOutOfBoundsException e){	
-				}
-				catch (NullPointerException e){	
-				}
-			}
-			
-			
-			
-		return outList;
-		}
+//		} else { //if the king IS in check then special rules apply in terms of 'Legal Moves'
+//			for (int j = 0; j < selectedPiece.getArraySize();j++){
+//				HypotheticalMove testMove = new HypotheticalMove(gameBoard, playersTurn);
+//				try {	
+//					//integer variables that are the location of the piece
+//					int xPiece = selectedPiece.getXValue()+inList[j].getFirst();
+//					int yPiece = selectedPiece.getYValue()+inList[j].getSecond();
+//					
+//					
+//					//if the gameboard is null
+//					if (gameBoard[xPiece][yPiece]!=null){
+//						if (gameBoard[xPiece][yPiece].isPlayersPiece()!=playersTurn){
+//							//if the piece that can be taken is a king, change the "check" boolean
+//							if (gameBoard[xPiece][yPiece].getPieceIndex()==0){
+//								gameBoard[xPiece][yPiece].setHasMoved();
+//								inCheck = true;
+//							} 
+//							
+//							testMove.movePiece(selectedPiece.getXValue(), selectedPiece.getYValue(), xPiece, yPiece);
+//							testMove.opponentKingsPosition();
+//							
+//							if (!spotIsInThreat(testMove.getKingsXPosition(), testMove.getKingsYPosition())){
+//								outList.add(inList[j]);
+//							}
+//							
+//							
+//						}
+//					break;
+//					}
+//					outList.add(inList[j]);
+//				}
+//				catch (ArrayIndexOutOfBoundsException e){	
+//				}
+//				catch (NullPointerException e){	
+//				}
+//			}
+//			
+//			
+//			
+//		return outList;
+//		}
 	}
 	
 	//Checks if the king is in check
