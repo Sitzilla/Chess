@@ -1,18 +1,20 @@
 package com.evansitzes.chessgame;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.net.URL;
+import com.evansitzes.chessgame.pieces.Piece;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.net.URL;
 
 
 @SuppressWarnings("serial")
 public class ChessGame extends JPanel implements ActionListener {
 
-	private static final int ARRAYSIZE = 8;
+    private static final int ARRAYSIZE = 8;
 //	 private final static Piece[][] gameBoard = new Piece[ARRAYSIZE][ARRAYSIZE]; //instantiates an array of 'Pair' objects of size 10
 //	 boolean playersTurn = true;
 //	 ArrayList<Pair> listOfMoves = new ArrayList<Pair>(); // arraylist of legal moves
@@ -28,10 +30,10 @@ public class ChessGame extends JPanel implements ActionListener {
     private final JButton moveButton = new JButton("New Game");
     private final JButton exitButton = new JButton("Exit");
     private final JLabel gameStatusLabel = new JLabel("Chess Fun");
-	 
-	public ChessGame(){
+
+    public ChessGame(){
         GameBoard gameBoard = new GameBoard();
-		JToolBar tools = new JToolBar();
+        JToolBar tools = new JToolBar();
         JPanel frame = new JPanel();
 
         //sets row0
@@ -39,14 +41,14 @@ public class ChessGame extends JPanel implements ActionListener {
         frame.setPreferredSize(new java.awt.Dimension(600,535));
         tools.setFloatable(false);
         
-		createImages();
+        createImages();
         createButtons(frame);
         initializebuttons();
         colorBoard();
 
-		//adds all of the rows to the frame
-		setLayout( new FlowLayout());
-		add(tools, BorderLayout.PAGE_START);
+        //adds all of the rows to the frame
+        setLayout( new FlowLayout());
+        add(tools, BorderLayout.PAGE_START);
         tools.add(new JButton("New")); // TODO add functionality!
         tools.add(new JButton("Save")); // TODO add functionality!
         tools.add(new JButton("Restore")); // TODO add functionality!
@@ -54,31 +56,31 @@ public class ChessGame extends JPanel implements ActionListener {
         tools.add(new JButton("Resign")); // TODO add functionality!
         tools.addSeparator();
         tools.add(turnStatus);
-		add(frame);
-			
-	}
+        add(frame);
+
+    }
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-		final JComponent source = (JComponent) evt.getSource(); //finds the source of the objects that triggers the event
-		int rowPos = (Integer) source.getClientProperty("row");
-		int columnPos = (Integer) source.getClientProperty("column");
+        final JComponent source = (JComponent) evt.getSource(); //finds the source of the objects that triggers the event
+        int rowPos = (Integer) source.getClientProperty("row");
+        int columnPos = (Integer) source.getClientProperty("column");
 
-		game.playTheGame(state, rowPos, columnPos, source);
-	}
+        game.playTheGame(state, rowPos, columnPos, source);
+    }
 
 
-	//method that highlights legal moves on the board
-	public void highlightLocation(int currentX, int currentY, int moveX, int moveY) {
-		int totalY = Math.abs(7 - (currentY + moveY));
-		int totalX = currentX + moveX;
-		
-		try {
-		    buttons[totalY][totalX].setBackground(Color.RED);
-		}
-		catch (ArrayIndexOutOfBoundsException e) {
-		}
-	}
+    //method that highlights legal moves on the board
+    public void highlightLocation(int currentX, int currentY, int moveX, int moveY) {
+        int totalY = Math.abs(7 - (currentY + moveY));
+        int totalX = currentX + moveX;
+
+        try {
+            buttons[totalY][totalX].setBackground(Color.RED);
+        }
+        catch (ArrayIndexOutOfBoundsException e) {
+        }
+    }
 
     private final void createImages() {
         try {
@@ -117,38 +119,38 @@ public class ChessGame extends JPanel implements ActionListener {
         }
     }
 
-	
-	//method that returns all buttons to their original color moves on the board
-	private void colorBoard() {
-		for (int i = 0; i < 8; i++){
-			for (int j = 0; j < 8; j++){
-				
-				if ((i + j) % 2 == 0){
-				    buttons[i][j].setBackground(Color.WHITE);
-				} else {
-				    buttons[i][j].setBackground(Color.BLACK);
-				}
-				
-			}
-		}
-	}
 
-	//method that moves the pieces around the board
-	public void recolorImage(int currentX , int currentY, int moveX, int moveY, Piece selectedPiece) {
-		int buttonMoveY = Math.abs(7 - moveY);
-		int buttonMoveY2 = Math.abs(7 - currentY);
-		int intPlayersPiece=0;
-		//returns whether it is a players piece or not
-		if (selectedPiece.isPlayersPiece()){
-			intPlayersPiece = 1;
-			turnStatus.setText("Black's move");
-		} else {
-			turnStatus.setText("White's move");
-		}
+    //method that returns all buttons to their original color moves on the board
+    private void colorBoard() {
+        for (int i = 0; i < 8; i++){
+            for (int j = 0; j < 8; j++){
 
-		buttons[buttonMoveY][moveX].setIcon(new ImageIcon(chessPieceImages[intPlayersPiece][selectedPiece.getPieceIndex()]));
-		buttons[buttonMoveY2][currentX].setIcon(null);
-	}
+                if ((i + j) % 2 == 0){
+                    buttons[i][j].setBackground(Color.WHITE);
+                } else {
+                    buttons[i][j].setBackground(Color.BLACK);
+                }
+
+            }
+        }
+    }
+
+    //method that moves the pieces around the board
+    public void recolorImage(int currentX , int currentY, int moveX, int moveY, Piece selectedPiece) {
+        int buttonMoveY = Math.abs(7 - moveY);
+        int buttonMoveY2 = Math.abs(7 - currentY);
+        int intPlayersPiece=0;
+        //returns whether it is a players piece or not
+        if (selectedPiece.isPlayersPiece()){
+            intPlayersPiece = 1;
+            turnStatus.setText("Black's move");
+        } else {
+            turnStatus.setText("White's move");
+        }
+
+        buttons[buttonMoveY][moveX].setIcon(new ImageIcon(chessPieceImages[intPlayersPiece][selectedPiece.getPieceIndex()]));
+        buttons[buttonMoveY2][currentX].setIcon(null);
+    }
 
     private void initializebuttons() {
         //initializes the gameboard array with base values.  The array could be thought of as an (x, y) coordinate plane.

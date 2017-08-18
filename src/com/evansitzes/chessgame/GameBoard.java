@@ -1,6 +1,6 @@
 package com.evansitzes.chessgame;
 
-import java.awt.*;
+import com.evansitzes.chessgame.pieces.*;
 
 /**
  * Created by evan on 8/15/17.
