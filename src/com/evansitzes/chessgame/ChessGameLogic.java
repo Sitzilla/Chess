@@ -27,7 +27,7 @@ public class ChessGameLogic {
 
     //method called whenever the user or computer selects a square.  returns 'true' or 'false' depending on whether the selected move was legal.
     //This method also adds the move to either the user's or the computer's array of moves.
-    public boolean playTheGame(ChessGameState state, int rowPos, int columnPos, JComponent source) {
+    public boolean playTheGame(final ChessGameState state, final int rowPos, final int columnPos, final JComponent source) {
 
         //logical statement to check if the selected piece is a piece
         if (gameBoard[columnPos][rowPos] != null) {
@@ -37,7 +37,7 @@ public class ChessGameLogic {
                     selectedPiece = null;
                 }
             }
-            catch (NullPointerException e) {
+            catch (final NullPointerException e) {
             }
             buildMoves(state, rowPos, columnPos, playersTurn);
 
@@ -52,7 +52,7 @@ public class ChessGameLogic {
         return false;
     }
 
-    private void buildMoves(ChessGameState state, int rowPos, int columnPos, boolean turn){
+    private void buildMoves(final ChessGameState state, final int rowPos, final int columnPos, final boolean turn){
         //if the selected piece is the players piece then treat it as a new selection
         if (selectedPiece == null && gameBoard[columnPos][rowPos].isPlayersPiece() == turn) {
             listOfMoves.clear();
@@ -84,16 +84,16 @@ public class ChessGameLogic {
     }
 
     //methods that returns all legal moves for a piece
-    private ArrayList<Pair> isLegalMoves(ChessGameState state, Pair[] inList){
-        ArrayList<Pair> outList = new ArrayList<Pair>();
+    private ArrayList<Pair> isLegalMoves(final ChessGameState state, final Pair[] inList){
+        final ArrayList<Pair> outList = new ArrayList<Pair>();
 
 //		if (!inCheck){ //if the king is not in check standard rules apply
             for (int j = 0; j < selectedPiece.getArraySize();j++){
-                HypotheticalMove testMove = new HypotheticalMove(gameBoard, playersTurn);
+                final HypotheticalMove testMove = new HypotheticalMove(gameBoard, playersTurn);
             try {
                 //integer variables that are the location of the piece
-                int xPiece = selectedPiece.getXValue()+inList[j].getFirst();
-                int yPiece = selectedPiece.getYValue()+inList[j].getSecond();
+                final int xPiece = selectedPiece.getXValue()+inList[j].getFirst();
+                final int yPiece = selectedPiece.getYValue()+inList[j].getSecond();
                 //if the gameboard is null
                 if (gameBoard[xPiece][yPiece]!=null){
                     if (gameBoard[xPiece][yPiece].isPlayersPiece()!=playersTurn){
@@ -114,9 +114,9 @@ public class ChessGameLogic {
                 }
                 outList.add(inList[j]);
             }
-            catch (ArrayIndexOutOfBoundsException e){
+            catch (final ArrayIndexOutOfBoundsException e){
             }
-            catch (NullPointerException e){
+            catch (final NullPointerException e){
             }
         }
 
@@ -166,7 +166,7 @@ public class ChessGameLogic {
     }
 
     //Checks if the king is in check
-    private boolean checkTheKing(ChessGameState state, int columnPos, int rowPos){
+    private boolean checkTheKing(final ChessGameState state, final int columnPos, final int rowPos){
         buildMoves(state, rowPos, columnPos, playersTurn);
         if(inCheck){
             return true;
@@ -174,7 +174,7 @@ public class ChessGameLogic {
         return false;
     }
 
-    private void executeMoves(ChessGameState state, JComponent source, int rowPos, int columnPos, boolean turn){
+    private void executeMoves(final ChessGameState state, final JComponent source, final int rowPos, final int columnPos, final boolean turn){
     //if the selected piece is the players piece then treat it as a new selection
     if (gameBoard[columnPos][rowPos] == null){
 
@@ -199,7 +199,7 @@ public class ChessGameLogic {
     }
 }
     //method that moves the pieces around the board
-    public void movePiece(int currentX , int currentY, int moveX, int moveY){
+    public void movePiece(final int currentX , final int currentY, final int moveX, final int moveY){
         gameBoard[moveX][moveY] = gameBoard[currentX][currentY];
         gameBoard[moveX][moveY].setXValue(moveX);
         gameBoard[moveX][moveY].setYValue(moveY);
@@ -214,7 +214,7 @@ public class ChessGameLogic {
     }
 
     //method that takes a location on the board as an input and returns a true if that area is under "threat" of being taken
-    private boolean spotIsInThreat(ChessGameState state, int rowPos, int columnPos){
+    private boolean spotIsInThreat(final ChessGameState state, final int rowPos, final int columnPos){
         for(int x = 0; x<8; x++){
             for(int y = 0; y<8; y++){
                 if (playersTurn){
@@ -258,7 +258,7 @@ public class ChessGameLogic {
         }
     }
 
-      public void setPawnStructure(int columnPos, int rowPos){
+      public void setPawnStructure(final int columnPos, final int rowPos){
           int leftTop = 0;
             int leftBottom = 0;
             int rightTop = 0;
@@ -272,80 +272,80 @@ public class ChessGameLogic {
                 gameBoard[columnPos-1][rowPos+1].getClass();
                 leftTop = 1;
                 }
-                catch (ArrayIndexOutOfBoundsException e){
+                catch (final ArrayIndexOutOfBoundsException e){
                 leftTop = 0;
                 }
-                catch (NullPointerException e){
+                catch (final NullPointerException e){
                 leftTop = 0;
                 }
             try {
                 gameBoard[columnPos-1][rowPos-1].getClass();
                 leftBottom = 1;
                 }
-                catch (ArrayIndexOutOfBoundsException e){
+                catch (final ArrayIndexOutOfBoundsException e){
                     leftBottom = 0;
                 }
-                catch (NullPointerException e){
+                catch (final NullPointerException e){
                     leftBottom = 0;
                 }
             try {
                 gameBoard[columnPos+1][rowPos+1].getClass();
                 rightTop = 1;
                 }
-                catch (ArrayIndexOutOfBoundsException e){
+                catch (final ArrayIndexOutOfBoundsException e){
                     rightTop = 0;
                 }
-                catch (NullPointerException e){
+                catch (final NullPointerException e){
                     rightTop = 0;
                 }
             try {
                 gameBoard[columnPos+1][rowPos-1].getClass();
                 rightBottom = 1;
                 }
-                catch (ArrayIndexOutOfBoundsException e){
+                catch (final ArrayIndexOutOfBoundsException e){
                     rightBottom = 0;
                 }
-                catch (NullPointerException e){
+                catch (final NullPointerException e){
                     rightBottom = 0;
                 }
             try {
                 gameBoard[columnPos][rowPos+1].getClass();
                 topOne = 1;
                 }
-                catch (ArrayIndexOutOfBoundsException e){
+                catch (final ArrayIndexOutOfBoundsException e){
                     topOne = 1;
                 }
-                catch (NullPointerException e){
+                catch (final NullPointerException e){
                     topOne = 0;
                 }
             try {
                 gameBoard[columnPos][rowPos+2].getClass();
                 topTwo = 1;
                 }
-                catch (ArrayIndexOutOfBoundsException e){
+                catch (final ArrayIndexOutOfBoundsException e){
                     topTwo = 1;
                 }
-                catch (NullPointerException e){
+                catch (final NullPointerException e){
                     topTwo = 0;
                 }
             try {
                 gameBoard[columnPos][rowPos-1].getClass();
                 bottomOne = 1;
                 }
-                catch (ArrayIndexOutOfBoundsException e){
+                catch (final ArrayIndexOutOfBoundsException e){
                     bottomOne = 1;
                 }
-                catch (NullPointerException e){
+                catch (final NullPointerException e){
                     bottomOne = 0;
                 }
             try {
                 gameBoard[columnPos][rowPos-2].getClass();
                 bottomTwo = 1;
                 }
-                catch (ArrayIndexOutOfBoundsException e){
+                catch (final ArrayIndexOutOfBoundsException e){
                     bottomTwo = 1;
                 }
-                catch (NullPointerException e){
+                catch (final NullPointerException e){
                     bottomTwo = 0;
                 }
 

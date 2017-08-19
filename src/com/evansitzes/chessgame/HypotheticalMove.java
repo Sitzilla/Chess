@@ -10,13 +10,13 @@ public class HypotheticalMove extends ChessGameLogic {
      private int kingsXPosition;
      private int kingsYPosition;
 
-     HypotheticalMove(Piece[][] gameBoard, boolean playersTurn) {
+     HypotheticalMove(final Piece[][] gameBoard, final boolean playersTurn) {
          this.gameBoard = gameBoard;
          this.playersTurn = playersTurn;
      }
 
 
-    public void movePiece(int piecePositionX, int piecePositionY, int pieceMoveX, int pieceMoveY){
+    public void movePiece(final int piecePositionX, final int piecePositionY, final int pieceMoveX, final int pieceMoveY){
         gameBoard[pieceMoveX][pieceMoveY] = gameBoard[piecePositionX][piecePositionX];
         gameBoard[piecePositionX][piecePositionX] = null;
     }

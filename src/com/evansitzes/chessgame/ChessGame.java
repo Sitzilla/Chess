@@ -32,9 +32,9 @@ public class ChessGame extends JPanel implements ActionListener {
     private final JLabel gameStatusLabel = new JLabel("Chess Fun");
 
     public ChessGame(){
-        GameBoard gameBoard = new GameBoard();
-        JToolBar tools = new JToolBar();
-        JPanel frame = new JPanel();
+        final GameBoard gameBoard = new GameBoard();
+        final JToolBar tools = new JToolBar();
+        final JPanel frame = new JPanel();
 
         //sets row0
         frame.setLayout( new GridLayout(8,8));
@@ -61,49 +61,49 @@ public class ChessGame extends JPanel implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent evt) {
+    public void actionPerformed(final ActionEvent evt) {
         final JComponent source = (JComponent) evt.getSource(); //finds the source of the objects that triggers the event
-        int rowPos = (Integer) source.getClientProperty("row");
-        int columnPos = (Integer) source.getClientProperty("column");
+        final int rowPos = (Integer) source.getClientProperty("row");
+        final int columnPos = (Integer) source.getClientProperty("column");
 
         game.playTheGame(state, rowPos, columnPos, source);
     }
 
 
     //method that highlights legal moves on the board
-    public void highlightLocation(int currentX, int currentY, int moveX, int moveY) {
-        int totalY = Math.abs(7 - (currentY + moveY));
-        int totalX = currentX + moveX;
+    public void highlightLocation(final int currentX, final int currentY, final int moveX, final int moveY) {
+        final int totalY = Math.abs(7 - (currentY + moveY));
+        final int totalX = currentX + moveX;
 
         try {
             buttons[totalY][totalX].setBackground(Color.RED);
         }
-        catch (ArrayIndexOutOfBoundsException e) {
+        catch (final ArrayIndexOutOfBoundsException e) {
         }
     }
 
     private final void createImages() {
         try {
-            URL url = new URL("http://i.stack.imgur.com/memI0.png");
-            BufferedImage bi = ImageIO.read(url);
+            final URL url = new URL("http://i.stack.imgur.com/memI0.png");
+            final BufferedImage bi = ImageIO.read(url);
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 6; j++) {
                     chessPieceImages[i][j] = bi.getSubimage(
                             j * 64, i * 64, 64, 64);
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
             System.exit(1);
         }
     }
 
-    private void createButtons(JPanel frame) {
+    private void createButtons(final JPanel frame) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 buttons[i][j] = new JButton();
                 // 'fill this in' using a transparent icon.
-                ImageIcon icon = new ImageIcon(
+                final ImageIcon icon = new ImageIcon(
                         new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB));
                 buttons[i][j].setIcon(icon);
             }
@@ -136,9 +136,9 @@ public class ChessGame extends JPanel implements ActionListener {
     }
 
     //method that moves the pieces around the board
-    public void recolorImage(int currentX , int currentY, int moveX, int moveY, Piece selectedPiece) {
-        int buttonMoveY = Math.abs(7 - moveY);
-        int buttonMoveY2 = Math.abs(7 - currentY);
+    public void recolorImage(final int currentX , final int currentY, final int moveX, final int moveY, final Piece selectedPiece) {
+        final int buttonMoveY = Math.abs(7 - moveY);
+        final int buttonMoveY2 = Math.abs(7 - currentY);
         int intPlayersPiece=0;
         //returns whether it is a players piece or not
         if (selectedPiece.isPlayersPiece()){
