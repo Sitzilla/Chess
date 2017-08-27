@@ -20,6 +20,7 @@ public class Knight extends Piece{
         this.playersPiece = playersPiece;
     }
 
+    // TODO replace index with enums
     @Override
     public int getPieceIndex() {
         return 3;

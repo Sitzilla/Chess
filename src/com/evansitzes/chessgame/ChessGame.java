@@ -23,6 +23,7 @@ public class ChessGame extends JPanel implements ActionListener {
 //	 int selectedPieceYPosition;
     private final ChessGameLogic game = new ChessGameLogic();
     private final ChessGameState state = new ChessGameState();
+    private final GameBoard board = new GameBoard();
     private final JButton[][] buttons = new JButton[ARRAYSIZE][ARRAYSIZE];
     private final Image[][] chessPieceImages = new Image[2][6];
     private final JLabel turnStatus = new JLabel("White's move");
@@ -32,9 +33,10 @@ public class ChessGame extends JPanel implements ActionListener {
     private final JLabel gameStatusLabel = new JLabel("Chess Fun");
 
     public ChessGame(){
-        final GameBoard gameBoard = new GameBoard();
         final JToolBar tools = new JToolBar();
         final JPanel frame = new JPanel();
+
+        state.board = new GameBoard();
 
         //sets row0
         frame.setLayout( new GridLayout(8,8));
@@ -67,6 +69,14 @@ public class ChessGame extends JPanel implements ActionListener {
         final int columnPos = (Integer) source.getClientProperty("column");
 
         game.playTheGame(state, rowPos, columnPos, source);
+
+        if (state.isLegalMove) {
+            if (state.isPieceSelected) {
+                for (int i = 0; i < state.legalMoves.size(); i++) {
+                    highlightLocation(state.selectedPiece.getXValue(), state.selectedPiece.getYValue(), state.legalMoves.get(i).getFirst(), state.legalMoves.get(i).getSecond());
+                }
+            }
+        }
     }
 
 
@@ -77,9 +87,28 @@ public class ChessGame extends JPanel implements ActionListener {
 
         try {
             buttons[totalY][totalX].setBackground(Color.RED);
+            buttons[totalY][totalX].setContentAreaFilled(false);
+            buttons[totalY][totalX].setOpaque(true);
         }
         catch (final ArrayIndexOutOfBoundsException e) {
         }
+    }
+
+    //method that moves the pieces around the board
+    public void recolorImage(final int currentX , final int currentY, final int moveX, final int moveY, final Piece selectedPiece) {
+        final int buttonMoveY = Math.abs(7 - moveY);
+        final int buttonMoveY2 = Math.abs(7 - currentY);
+        int intPlayersPiece=0;
+        //returns whether it is a players piece or not
+        if (selectedPiece.isPlayersPiece()){
+            intPlayersPiece = 1;
+            turnStatus.setText("Black's move");
+        } else {
+            turnStatus.setText("White's move");
+        }
+
+        buttons[buttonMoveY][moveX].setIcon(new ImageIcon(chessPieceImages[intPlayersPiece][selectedPiece.getPieceIndex()]));
+        buttons[buttonMoveY2][currentX].setIcon(null);
     }
 
     private final void createImages() {
@@ -103,16 +132,16 @@ public class ChessGame extends JPanel implements ActionListener {
             for (int j = 0; j < 8; j++) {
                 buttons[i][j] = new JButton();
                 // 'fill this in' using a transparent icon.
-                final ImageIcon icon = new ImageIcon(
-                        new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB));
-                buttons[i][j].setIcon(icon);
+//                final ImageIcon icon = new ImageIcon(
+//                        new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB));
+//                buttons[i][j].setIcon(icon);
             }
         }
 
         for (int i = 0; i < 8; i++){  //initialize column (i)
             for (int j = 0; j < 8; j++){ //initialize row (j)
-                buttons[i][j].putClientProperty("row", Integer.valueOf(Math.abs(7 - i)));
-                buttons[i][j].putClientProperty("column", Integer.valueOf(j));
+                buttons[i][j].putClientProperty("row", Math.abs(7 - i));
+                buttons[i][j].putClientProperty("column", j);
                 buttons[i][j].addActionListener(this);
                 frame.add(buttons[i][j]);
             }
@@ -131,32 +160,17 @@ public class ChessGame extends JPanel implements ActionListener {
                     buttons[i][j].setBackground(Color.BLACK);
                 }
 
+                buttons[i][j].setContentAreaFilled(false);
+                buttons[i][j].setOpaque(true);
             }
         }
-    }
-
-    //method that moves the pieces around the board
-    public void recolorImage(final int currentX , final int currentY, final int moveX, final int moveY, final Piece selectedPiece) {
-        final int buttonMoveY = Math.abs(7 - moveY);
-        final int buttonMoveY2 = Math.abs(7 - currentY);
-        int intPlayersPiece=0;
-        //returns whether it is a players piece or not
-        if (selectedPiece.isPlayersPiece()){
-            intPlayersPiece = 1;
-            turnStatus.setText("Black's move");
-        } else {
-            turnStatus.setText("White's move");
-        }
-
-        buttons[buttonMoveY][moveX].setIcon(new ImageIcon(chessPieceImages[intPlayersPiece][selectedPiece.getPieceIndex()]));
-        buttons[buttonMoveY2][currentX].setIcon(null);
     }
 
     private void initializebuttons() {
         //initializes the gameboard array with base values.  The array could be thought of as an (x, y) coordinate plane.
         //All values for an array of type 'int' are defaulted to 0, and these loops put values of '1' where piece objects will start
         //initializes pawns
-        for(int x = 0; x<8; x++){
+        for(int x = 0; x < 8; x++){
             buttons[6][x].setIcon(new ImageIcon(chessPieceImages[1][5]));
             buttons[1][x].setIcon(new ImageIcon(chessPieceImages[0][5]));
         }

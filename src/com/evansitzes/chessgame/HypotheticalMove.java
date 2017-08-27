@@ -16,7 +16,7 @@ public class HypotheticalMove extends ChessGameLogic {
      }
 
 
-    public void movePiece(final int piecePositionX, final int piecePositionY, final int pieceMoveX, final int pieceMoveY){
+    public void movePiece(ChessGameState state, final int piecePositionX, final int piecePositionY, final int pieceMoveX, final int pieceMoveY){
         gameBoard[pieceMoveX][pieceMoveY] = gameBoard[piecePositionX][piecePositionX];
         gameBoard[piecePositionX][piecePositionX] = null;
     }

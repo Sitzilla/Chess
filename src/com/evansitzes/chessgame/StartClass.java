@@ -7,7 +7,21 @@ public class StartClass {
 
 public static void main(final String[] args) {
 
-        final JFrame window = new JFrame("Chess");
+    // Necessary so UI works cross-platform
+    try {
+        UIManager.setLookAndFeel(
+                UIManager.getCrossPlatformLookAndFeelClassName());
+    } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+    } catch (InstantiationException e) {
+        e.printStackTrace();
+    } catch (IllegalAccessException e) {
+        e.printStackTrace();
+    } catch (UnsupportedLookAndFeelException e) {
+        e.printStackTrace();
+    }
+
+    final JFrame window = new JFrame("Chess");
         final ChessGame game = new ChessGame();
         window.setContentPane(game);
         final Dimension d = new Dimension(600,600);
