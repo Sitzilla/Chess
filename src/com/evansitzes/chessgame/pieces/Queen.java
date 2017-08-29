@@ -32,6 +32,8 @@ public class Queen extends Piece{
     
     @Override
     public ArrayList<Pair[]> moveRange() {
+        list.clear();
+
         for (int i = 0; i < ARRAYSIZE; i++) {
             arrayOfMoves1[i] = new Pair(0,i + 1);
             arrayOfMoves2[i] = new Pair(i + 1,0);

@@ -33,6 +33,8 @@ public class Knight extends Piece{
 
     @Override
     public ArrayList<Pair[]> moveRange() {
+        list.clear();
+
         arrayOfMoves1[0] = new Pair(1,2);
         arrayOfMoves2[0] = new Pair(1,-2);
         arrayOfMoves3[0] = new Pair(2,1);

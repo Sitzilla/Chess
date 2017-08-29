@@ -16,7 +16,7 @@ public class HypotheticalMove extends ChessGameLogic {
      }
 
 
-    public void movePiece(ChessGameState state, final int piecePositionX, final int piecePositionY, final int pieceMoveX, final int pieceMoveY){
+    public void movePiece(final ChessGameState state, final int piecePositionX, final int piecePositionY, final int pieceMoveX, final int pieceMoveY) {
         gameBoard[pieceMoveX][pieceMoveY] = gameBoard[piecePositionX][piecePositionX];
         gameBoard[piecePositionX][piecePositionX] = null;
     }
@@ -30,15 +30,20 @@ public class HypotheticalMove extends ChessGameLogic {
 
     public void opponentKingsPosition() {
         for(int x = 0; x < 8; x++) {
-            for(int y = 0; y<8; y++) {
-                if (playersTurn){
-                    if (gameBoard[x][y].getPieceIndex() == 0 && gameBoard[x][y].isPlayersPiece()){
+            for(int y = 0; y < 8; y++) {
+
+                if (gameBoard[x][y] == null) {
+                    continue;
+                }
+
+                if (playersTurn) {
+                    if (gameBoard[x][y].getPieceIndex() == 0 && gameBoard[x][y].isPlayersPiece()) {
                         kingsXPosition = x;
                         kingsYPosition = y;
                     }
 
                 } else {
-                    if (gameBoard[x][y].getPieceIndex() == 0 && !gameBoard[x][y].isPlayersPiece()){
+                    if (gameBoard[x][y].getPieceIndex() == 0 && !gameBoard[x][y].isPlayersPiece()) {
                         kingsXPosition = x;
                         kingsYPosition = y;
                     }

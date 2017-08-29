@@ -22,9 +22,7 @@ public class ChessGameLogic {
 //            return false;
 //        }
 
-        if (!state.isPieceSelected
-                && state.board.getPiece(columnPos, rowPos) == null
-                || !state.board.getPiece(columnPos, rowPos).isPlayersPiece()) {
+        if (!state.isPieceSelected && (state.board.getPiece(columnPos, rowPos) == null || !state.board.getPiece(columnPos, rowPos).isPlayersPiece())) {
             System.out.println("Player needs to select a piece first.");
             state.isLegalMove = false;
             return;
@@ -32,9 +30,16 @@ public class ChessGameLogic {
 
         // If player has already selected a piece last turn
         if (state.isPieceSelected) {
-            executeMoves(state, source, rowPos, columnPos);
-            state.isPieceSelected = false;
-            state.isLegalMove = true;
+            final boolean isLegalMove = executeMoves(state, source, rowPos, columnPos);
+
+            if (isLegalMove) {
+                state.selectedPiece.resetMove();
+                state.isPieceSelected = false;
+                state.isLegalMove = true;
+                state.isPieceJustMoved = true;
+                return;
+            }
+
             return;
         }
 
@@ -59,7 +64,7 @@ public class ChessGameLogic {
 
     private void buildMoves(final ChessGameState state, final int rowPos, final int columnPos) {
         legalMoves.clear();
-        ArrayList<Pair[]> list;
+        final ArrayList<Pair[]> defaultAvailableMoves;
 
         //if piece is a pawn, check its diagonals for objects
         // WTF is this??
@@ -67,55 +72,59 @@ public class ChessGameLogic {
             setPawnStructure(state, columnPos, rowPos);
         }
 
-        list = state.board.getPiece(columnPos, rowPos).moveRange();
-//        selectedPieceXPosition = state.board.getPiece(columnPos, rowPos).getXValue();
-//        selectedPieceYPosition = state.board.getPiece(columnPos, rowPos).getYValue();
+        defaultAvailableMoves = state.board.getPiece(columnPos, rowPos).moveRange();
 
-        //TODO color board state
-//            state.boardView.colorBoard();
-
-        //takes all moves from the arraylist 'list' and adds the legal moves to the arraylist 'legalMoves'
-        for (int i = 0; i < list.size(); i++) {
-                legalMoves.addAll(isLegalMoves(state, list.get(i)));
+        //takes all moves from the arraylist 'defaultAvailableMoves' and adds the legal moves to the arraylist 'legalMoves'
+        for (int i = 0; i < defaultAvailableMoves.size(); i++) {
+                legalMoves.addAll(parseLegalMovesInOneDirection(state, defaultAvailableMoves.get(i)));
         }
         //highlights the moves that the piece can make
         state.legalMoves = legalMoves;
     }
 
     //methods that returns all legal moves for a piece
-    private ArrayList<Pair> isLegalMoves(final ChessGameState state, final Pair[] inList) {
-        final ArrayList<Pair> outList = new ArrayList<>();
+    private ArrayList<Pair> parseLegalMovesInOneDirection(final ChessGameState state, final Pair[] defaultMovesInOneDirection) {
+        final ArrayList<Pair> squaresThatCanBeMovedTo = new ArrayList<>();
 
 //		if (!inCheck) { //if the king is not in check standard rules apply
-            for (int j = 0; j < state.selectedPiece.getArraySize(); j++) {
-                final HypotheticalMove testMove = new HypotheticalMove(state.board.board.clone(), true);
+            for (int i = 0; i < state.selectedPiece.getArraySize(); i++) {
+                final HypotheticalMove testMove = new HypotheticalMove(state.board.getDeepCloneOfCurrentState(), true);
 
                 try {
                     //integer variables that are the location of the piece
-                    final int xPiece = state.selectedPiece.getXValue() + inList[j].getFirst();
-                    final int yPiece = state.selectedPiece.getYValue() + inList[j].getSecond();
+                    final int xPiece = state.selectedPiece.getXValue() + defaultMovesInOneDirection[i].getFirst();
+                    final int yPiece = state.selectedPiece.getYValue() + defaultMovesInOneDirection[i].getSecond();
                     //if the state.board is null
+
                     if (state.board.getPiece(xPiece, yPiece) != null) {
                         //if the piece that can be taken is a king, change the "check" boolean
-                        if (state.board.getPiece(xPiece, yPiece).getPieceIndex()==0) {
-                            state.board.getPiece(xPiece, yPiece).setHasMoved();
-                            inCheck = true;
+//                        if (state.board.getPiece(xPiece, yPiece).getPieceIndex() == 0) {
+//                            state.board.getPiece(xPiece, yPiece).setHasMoved();
+//                            inCheck = true;
+//                        }
+
+                        if (state.board.getPiece(xPiece, yPiece).isPlayersPiece()) {
+                            return squaresThatCanBeMovedTo;
                         }
+
                         testMove.movePiece(state, state.selectedPiece.getXValue(), state.selectedPiece.getYValue(), xPiece, yPiece);
                         testMove.opponentKingsPosition();
 
-                        if (!spotIsInThreat(state, testMove.getKingsXPosition(), testMove.getKingsYPosition())) {
-                            outList.add(inList[j]);
-                        }
-                        
+//                        if (!spotIsInThreat(state, testMove.getKingsXPosition(), testMove.getKingsYPosition())) {
+//                            squaresThatCanBeMovedTo.add(defaultMovesInOneDirection[i]);
+//                        }
+
+                        squaresThatCanBeMovedTo.add(defaultMovesInOneDirection[i]);
                         break;
                     }
-                    outList.add(inList[j]);
+                    squaresThatCanBeMovedTo.add(defaultMovesInOneDirection[i]);
                 }
-                catch (final ArrayIndexOutOfBoundsException | NullPointerException e) {}
+                catch (final ArrayIndexOutOfBoundsException | NullPointerException e) {
+                    return squaresThatCanBeMovedTo;
+                }
             }
 
-        return outList;
+        return squaresThatCanBeMovedTo;
 
 //		} else { //if the king IS in check then special rules apply in terms of 'Legal Moves'
 //			for (int j = 0; j < selectedPiece.getArraySize();j++) {
@@ -160,7 +169,7 @@ public class ChessGameLogic {
 //		}
     }
 
-    //Checks if the king is in check
+    // Checks if the king is in check
     private boolean checkTheKing(final ChessGameState state, final int columnPos, final int rowPos) {
         buildMoves(state, rowPos, columnPos);
         if(inCheck) {
@@ -169,37 +178,41 @@ public class ChessGameLogic {
         return false;
     }
 
-    private void executeMoves(final ChessGameState state, final JComponent source, final int rowPos, final int columnPos) {
+    // Execute the moves passed in, returns true if the move executes successfully
+    private boolean executeMoves(final ChessGameState state, final JComponent source, final int rowPos, final int columnPos) {
     //if the selected piece is the players piece then treat it as a new selection
-    if (state.board.getPiece(columnPos, rowPos) == null) {
+    if (state.board.getPiece(columnPos, rowPos) == null || !state.board.getPiece(columnPos, rowPos).isPlayersPiece()) {
 
         //if the selected move is in the list of legal moves
-        if (source.getBackground() == Color.RED
-//                || state.board.getPiece(columnPos, rowPos).isPlayersPiece()
-        ) {
-        movePiece(state, state.selectedPiece.getXValue(), state.selectedPiece.getYValue(), columnPos, rowPos);
-            // TODO modify state
-//            state.boardView.recolorImage(selectedPieceXPosition, selectedPieceYPosition, columnPos, rowPos, selectedPiece);
-            state.selectedPiece.resetMove();
-            state.selectedPiece = null;
-            if(checkTheKing(state, columnPos, rowPos)) {
-                inCheck = false;
-                JOptionPane.showMessageDialog(null, "Check!!");
-            }
+        if (source.getBackground() == Color.RED) {
 
-            // TODO modify state
-//		state.boardView.colorBoard();
-        state.selectedPiece.resetMove();
-        state.selectedPiece = null;
+            state.previousXPosition = state.selectedPiece.getXValue();
+            state.previousYPosition = state.selectedPiece.getYValue();
+
+            movePiece(state, state.selectedPiece.getXValue(), state.selectedPiece.getYValue(), columnPos, rowPos);
+
+                //TODO check the king logic
+    //        if(checkTheKing(state, columnPos, rowPos)) {
+    //            inCheck = false;
+    //            JOptionPane.showMessageDialog(null, "Check!!");
+    //        }
+
+                // TODO modify state
+    //		state.boardView.colorBoard();
+            return true;
         }
     }
+
+    return false;
 }
     //method that moves the pieces around the board
-    public void movePiece(ChessGameState state, final int piecePositionX, final int piecePositionY, final int pieceMoveX, final int pieceMoveY) {
+    public void movePiece(final ChessGameState state, final int piecePositionX, final int piecePositionY, final int pieceMoveX, final int pieceMoveY) {
 //        state.board.getPiece(piecePositionX, piecePositionY) = state.board[piecePositionX][piecePositionY];
         state.board.getPiece(piecePositionX, piecePositionY).setXValue(pieceMoveX);
         state.board.getPiece(piecePositionX, piecePositionY).setYValue(pieceMoveY);
 
+        state.board.board[state.previousXPosition][state.previousYPosition] = null;
+        state.board.board[state.selectedPiece.getXValue()][state.selectedPiece.getYValue()] = state.selectedPiece;
 //        state.board.getPiece(piecePositionX, piecePositionY) = null;
 
 
@@ -244,15 +257,15 @@ public class ChessGameLogic {
         return false;
     }
 
-    private void setPawnStructure(ChessGameState state, final int columnPos, final int rowPos) {
-      int leftTop = 0;
-        int leftBottom = 0;
-        int rightTop = 0;
-        int rightBottom = 0;
-        int topOne = 0;
-        int topTwo = 0;
-        int bottomOne = 0;
-        int bottomTwo = 0;
+    private void setPawnStructure(final ChessGameState state, final int columnPos, final int rowPos) {
+        int leftTop = 0;
+        final int leftBottom = 0;
+        final int rightTop = 0;
+        final int rightBottom = 0;
+        final int topOne = 0;
+        final int topTwo = 0;
+        final int bottomOne = 0;
+        final int bottomTwo = 0;
 
         System.out.println("WTF is this?");
 

@@ -76,6 +76,19 @@ public class ChessGame extends JPanel implements ActionListener {
                     highlightLocation(state.selectedPiece.getXValue(), state.selectedPiece.getYValue(), state.legalMoves.get(i).getFirst(), state.legalMoves.get(i).getSecond());
                 }
             }
+
+            // TODO consider having each piece know its own icon
+            if (state.isPieceJustMoved) {
+                buttons[7 - state.selectedPiece.getYValue()][state.selectedPiece.getXValue()].setIcon(buttons[7 - state.previousYPosition][state.previousXPosition].getIcon());
+                buttons[7 - state.previousYPosition][state.previousXPosition].setIcon(null);
+
+//                state.board.board[state.previousXPosition][state.previousYPosition] = null;
+//                state.board.board[state.selectedPiece.getXValue()][state.selectedPiece.getYValue()] = state.selectedPiece;
+
+                state.isPieceJustMoved = false;
+                state.isLegalMove = false;
+                colorBoard();
+            }
         }
     }
 

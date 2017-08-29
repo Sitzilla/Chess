@@ -33,6 +33,8 @@ public class King extends Piece{
 
     @Override
     public ArrayList<Pair[]> moveRange() {
+        list.clear();
+
         arrayOfMoves1[0] = new Pair(1,0);
         arrayOfMoves2[0] = new Pair(1,1);
         arrayOfMoves3[0] = new Pair(1,-1);

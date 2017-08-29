@@ -52,4 +52,14 @@ public class GameBoard {
     public Piece getPiece(final int columnPosition, final int rowPosition) {
         return board[columnPosition][rowPosition];
     }
+
+    public Piece[][] getDeepCloneOfCurrentState() {
+        final Piece[][] newBoard = new Piece[ARRAYSIZE][ARRAYSIZE];
+
+        for (int i = 0; i < ARRAYSIZE; i++) {
+            newBoard[i] = board[i].clone();
+        }
+
+        return newBoard;
+    }
 }
