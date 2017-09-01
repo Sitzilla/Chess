@@ -2,7 +2,7 @@ package com.evansitzes.chessgame.pieces;
 
 import java.util.ArrayList;
 
-public abstract class Piece{
+public abstract class Piece {
 
     private int xLocation;
     private int yLocation;
@@ -33,8 +33,8 @@ public abstract class Piece{
     }
 
     public abstract ArrayList<Pair[]> moveRange();
+    public abstract PieceType getPieceType();
     public abstract int getArraySize();
-    public abstract int getPieceIndex();
     public abstract void setHasMoved();
     public abstract void setDiagonals(int leftTop, int leftBottom, int rightTop, int rightBottom, int frontOne, int frontTwo, int bottomOne, int bottomTwo);
     public abstract void resetMove();

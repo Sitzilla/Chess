@@ -1,6 +1,7 @@
 package com.evansitzes.chessgame;
 
 import com.evansitzes.chessgame.pieces.Piece;
+import com.evansitzes.chessgame.pieces.PieceType;
 
 public class HypotheticalMove extends ChessGameLogic {
 
@@ -37,13 +38,13 @@ public class HypotheticalMove extends ChessGameLogic {
                 }
 
                 if (playersTurn) {
-                    if (gameBoard[x][y].getPieceIndex() == 0 && gameBoard[x][y].isPlayersPiece()) {
+                    if (gameBoard[x][y].getPieceType() == PieceType.KING && gameBoard[x][y].isPlayersPiece()) {
                         kingsXPosition = x;
                         kingsYPosition = y;
                     }
 
                 } else {
-                    if (gameBoard[x][y].getPieceIndex() == 0 && !gameBoard[x][y].isPlayersPiece()) {
+                    if (gameBoard[x][y].getPieceType() == PieceType.KING && !gameBoard[x][y].isPlayersPiece()) {
                         kingsXPosition = x;
                         kingsYPosition = y;
                     }

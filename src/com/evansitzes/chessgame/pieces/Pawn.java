@@ -3,13 +3,14 @@ package com.evansitzes.chessgame.pieces;
 import java.util.ArrayList;
 
 
-public class Pawn extends Piece{
+public class Pawn extends Piece {
 
     private static final int ARRAYSIZE = 7;
     private final Pair[] arrayOfMoves1 = new Pair[ARRAYSIZE];
     private final Pair[] arrayOfMoves2 = new Pair[ARRAYSIZE];
     private final Pair[] arrayOfMoves3 = new Pair[ARRAYSIZE];
     private final Pair[] arrayOfMoves4 = new Pair[ARRAYSIZE];
+    private final PieceType pieceType = PieceType.PAWN;
     private boolean hasMoved;
     private boolean canMoveLeft;
     private boolean canMoveRight;
@@ -35,8 +36,8 @@ public class Pawn extends Piece{
     }
 
     @Override
-    public int getPieceIndex() {
-        return 5;
+    public PieceType getPieceType() {
+        return pieceType;
     }
 
     @Override

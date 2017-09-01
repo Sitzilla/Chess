@@ -1,6 +1,7 @@
 package com.evansitzes.chessgame;
 
 import com.evansitzes.chessgame.pieces.Pair;
+import com.evansitzes.chessgame.pieces.PieceType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,7 +69,7 @@ public class ChessGameLogic {
 
         //if piece is a pawn, check its diagonals for objects
         // WTF is this??
-        if (state.selectedPiece.getPieceIndex() == 5) {
+        if (state.selectedPiece.getPieceType() == PieceType.PAWN) {
             setPawnStructure(state, columnPos, rowPos);
         }
 
@@ -98,7 +99,7 @@ public class ChessGameLogic {
 
                     if (state.board.getPiece(xPiece, yPiece) != null) {
                         //if the piece that can be taken is a king, change the "check" boolean
-//                        if (state.board.getPiece(xPiece, yPiece).getPieceIndex() == 0) {
+//                        if (state.board.getPiece(xPiece, yPiece).getPieceType() == 0) {
 //                            state.board.getPiece(xPiece, yPiece).setHasMoved();
 //                            inCheck = true;
 //                        }
@@ -139,7 +140,7 @@ public class ChessGameLogic {
 //					if (state.board[xPiece][yPiece]!=null) {
 //						if (state.board[xPiece][yPiece].isPlayersPiece()!=playersTurn) {
 //							//if the piece that can be taken is a king, change the "check" boolean
-//							if (state.board[xPiece][yPiece].getPieceIndex()==0) {
+//							if (state.board[xPiece][yPiece].getPieceType()==0) {
 //								state.board[xPiece][yPiece].setHasMoved();
 //								inCheck = true;
 //							} 
@@ -217,7 +218,7 @@ public class ChessGameLogic {
 
 
         //if piece is a pawn, set its 'hasMoved' boolean to true so that it cannot move two spaces
-        if (state.selectedPiece.getPieceIndex() == 5) {
+        if (state.selectedPiece.getPieceType() == PieceType.PAWN) {
             state.selectedPiece.setHasMoved();
         }
     }

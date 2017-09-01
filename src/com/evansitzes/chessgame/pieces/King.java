@@ -2,7 +2,7 @@ package com.evansitzes.chessgame.pieces;
 
 import java.util.ArrayList;
 
-public class King extends Piece{
+public class King extends Piece {
 
     private static final int ARRAYSIZE = 7;
     private final ArrayList<Pair[]> list = new ArrayList<>();
@@ -14,6 +14,7 @@ public class King extends Piece{
     private final Pair[] arrayOfMoves6 = new Pair[ARRAYSIZE];
     private final Pair[] arrayOfMoves7 = new Pair[ARRAYSIZE];
     private final Pair[] arrayOfMoves8 = new Pair[ARRAYSIZE];
+    private final PieceType pieceType = PieceType.KING;
     private boolean hasMoved;
 
     public King(final int xValue, final int yValue, final boolean playersPiece) {
@@ -22,8 +23,8 @@ public class King extends Piece{
     }
 
     @Override
-    public int getPieceIndex() {
-        return 0;
+    public PieceType getPieceType() {
+        return pieceType;
     }
 
     @Override

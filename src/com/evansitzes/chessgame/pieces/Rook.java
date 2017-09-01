@@ -10,6 +10,7 @@ public class Rook extends Piece {
     private final Pair[] arrayOfMoves2 = new Pair[ARRAYSIZE];
     private final Pair[] arrayOfMoves3 = new Pair[ARRAYSIZE];
     private final Pair[] arrayOfMoves4 = new Pair[ARRAYSIZE];
+    private final PieceType pieceType = PieceType.ROOK;
     private boolean hasMoved;
 
     public Rook(final int xValue, final int yValue, final boolean playersPiece) {
@@ -18,8 +19,8 @@ public class Rook extends Piece {
     }
 
     @Override
-    public int getPieceIndex() {
-        return 2;
+    public PieceType getPieceType() {
+        return pieceType;
     }
 
     @Override

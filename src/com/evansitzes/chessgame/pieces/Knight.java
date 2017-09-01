@@ -2,7 +2,7 @@ package com.evansitzes.chessgame.pieces;
 
 import java.util.ArrayList;
 
-public class Knight extends Piece{
+public class Knight extends Piece {
 
     private static final int ARRAYSIZE = 1;
     private final ArrayList<Pair[]> list = new ArrayList<>();
@@ -14,6 +14,7 @@ public class Knight extends Piece{
     private final Pair[] arrayOfMoves6 = new Pair[ARRAYSIZE];
     private final Pair[] arrayOfMoves7 = new Pair[ARRAYSIZE];
     private final Pair[] arrayOfMoves8 = new Pair[ARRAYSIZE];
+    private final PieceType pieceType = PieceType.KNIGHT;
 
     public Knight(final int xValue, final int yValue, final boolean playersPiece) {
         super(xValue, yValue, playersPiece);
@@ -22,8 +23,8 @@ public class Knight extends Piece{
 
     // TODO replace index with enums
     @Override
-    public int getPieceIndex() {
-        return 3;
+    public PieceType getPieceType() {
+        return pieceType;
     }
 
     @Override

@@ -1,7 +1,5 @@
 package com.evansitzes.chessgame;
 
-import com.evansitzes.chessgame.pieces.Piece;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -107,22 +105,22 @@ public class ChessGame extends JPanel implements ActionListener {
         }
     }
 
-    //method that moves the pieces around the board
-    public void recolorImage(final int currentX , final int currentY, final int moveX, final int moveY, final Piece selectedPiece) {
-        final int buttonMoveY = Math.abs(7 - moveY);
-        final int buttonMoveY2 = Math.abs(7 - currentY);
-        int intPlayersPiece=0;
-        //returns whether it is a players piece or not
-        if (selectedPiece.isPlayersPiece()){
-            intPlayersPiece = 1;
-            turnStatus.setText("Black's move");
-        } else {
-            turnStatus.setText("White's move");
-        }
-
-        buttons[buttonMoveY][moveX].setIcon(new ImageIcon(chessPieceImages[intPlayersPiece][selectedPiece.getPieceIndex()]));
-        buttons[buttonMoveY2][currentX].setIcon(null);
-    }
+//    //method that moves the pieces around the board
+//    public void recolorImage(final int currentX , final int currentY, final int moveX, final int moveY, final Piece selectedPiece) {
+//        final int buttonMoveY = Math.abs(7 - moveY);
+//        final int buttonMoveY2 = Math.abs(7 - currentY);
+//        int intPlayersPiece=0;
+//        //returns whether it is a players piece or not
+//        if (selectedPiece.isPlayersPiece()){
+//            intPlayersPiece = 1;
+//            turnStatus.setText("Black's move");
+//        } else {
+//            turnStatus.setText("White's move");
+//        }
+//
+//        buttons[buttonMoveY][moveX].setIcon(new ImageIcon(chessPieceImages[intPlayersPiece][selectedPiece.getPieceType()]));
+//        buttons[buttonMoveY2][currentX].setIcon(null);
+//    }
 
     private final void createImages() {
         try {
